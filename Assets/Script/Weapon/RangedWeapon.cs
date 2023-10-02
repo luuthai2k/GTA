@@ -1,0 +1,105 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RangedWeapon : MonoBehaviour
+{
+    private LayerMask HumanLayer;
+    private ParticleSystem hitEffect;
+    public WeaponData WeaponData;
+    public Transform muzzle;
+    private ParticleSystem flash;
+    public float fireRate = 0;
+    public float startTime;
+    Ray ray;
+    private void Start()
+    {
+        HumanLayer = GameManager.ins.layerData.HumanLayer;
+        startTime = WeaponData._startTime;
+    }
+    private void Update()
+    {
+        //    if (Input.GetMouseButton(0))
+        //    {
+        //        StartShooting();
+        //    }
+
+
+
+    }
+    public void StartShooting(Vector3 direction)
+    {
+
+        if (startTime > 0)
+        {
+            startTime -= Time.deltaTime;
+            return;
+        }
+        else
+        {
+            //Invoke("Shooting", 0.1f);
+            Shooting(direction);
+        }
+
+
+    }
+    public void Shooting(Vector3 direction)
+    {
+
+        if (fireRate > 0)
+        {
+            fireRate -= Time.deltaTime;
+            Player.ins.animator.SetBool("RangedWeaponShoot", false);
+            return;
+        }
+        if (fireRate <= 0)
+        {
+            Vector3 pos = muzzle.position;
+            fireRate = 1f / WeaponData._fireRate;
+            flash = FxPooling.ins.GetmuzzleFlashPool(muzzle.position);
+            flash.gameObject.transform.parent = muzzle;
+            flash.gameObject.transform.localScale = Vector3.one;
+            flash.gameObject.transform.forward = muzzle.forward;
+            FxPooling.ins.ReturnPool(flash, 0.5f);
+            var bullet = Instantiate(WeaponData._bullet, pos, Quaternion.identity);
+            HitCheck(direction);
+            bullet.GetComponent<Rigidbody>().AddForce(direction * WeaponData._power);
+            Player.ins.animator.SetBool("RangedWeaponShoot", true);
+
+        }
+    }
+    public void HitCheck(Vector3 direction)
+    {
+        ray.origin = muzzle.transform.position;
+        ray.direction = direction;
+
+        Debug.DrawRay(ray.origin, ray.direction * 200f, Color.green);
+
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 200f))
+        {
+            if (HumanLayer == (HumanLayer | (1 << raycastHit.collider.gameObject.layer)))
+            {
+                hitEffect = FxPooling.ins.GetbloodEffectPool(raycastHit.point);
+                hitEffect.gameObject.transform.LookAt(muzzle);
+                hitEffect.gameObject.transform.parent = raycastHit.collider.gameObject.transform;
+            }
+
+
+            else
+            {
+                hitEffect = FxPooling.ins.GetstoneHitEffectPool(raycastHit.point);
+                hitEffect.gameObject.transform.LookAt(muzzle);
+
+            }
+
+
+
+
+        }
+    }
+    public void FinishShooting()
+    {
+        startTime = WeaponData._startTime;
+        fireRate -= Time.deltaTime;
+    }
+}
