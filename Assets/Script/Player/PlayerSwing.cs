@@ -7,38 +7,34 @@ using Cinemachine;
 
 public class PlayerSwing : MonoBehaviour
 {
-    public CinemachineFreeLook freeLookCamera;
     private Tween myTween;
     float turnCalmVelocity;
     [SerializeField] float turnCalmTime = 1f;
-    public PlayerControl playerControl;
-    public float heightMax;
-    public LineRenderer lineRenderer;
+    [SerializeField] private PlayerControl playerControl;
+    [SerializeField] private float heightMax;
+    [SerializeField] private LineRenderer lineRenderer;
     SpringJoint joint;
-    [Header("Player Swing")]
+    [Header("Player Jump")]
+    public float speed;
     public float Gravity;
-    public float force;
     public float jumpHeight;
-    public float _verticalVelocity;
-    public float currenforce;
-    public float foward;
-    public float currenfoward;
+    private float _verticalVelocity;
+    private bool isjump;
+    [Header("Player Swing")]
     [SerializeField] Transform swingStartPoint;
     [SerializeField] Vector3 swingPoint;
-    public bool startSwing;
-    public PlayerMove playerMove;
     [SerializeField] Transform swingPivot;
-    public bool isjump;
+    private bool startSwing;
+    public float force;
+    public float foward;
     public float shootsilk;
-    public float swing;
-    public bool isSwing;
-    public bool isfall;
-    public bool canswing = true;
-    public float speedrotateswing;
-    public bool isfinish;
-    public float currentdamping;
     public float damping;
     public float maxAngle;
+    private bool isSwing;
+    private bool isfall;
+    private bool canswing = true;
+    private float swing;
+    private float currentdamping;
     public void Jump()
     {
         Player.ins.animator.SetBool("IsJump", true);
@@ -49,8 +45,6 @@ public class PlayerSwing : MonoBehaviour
         
         if (Input.GetKey(KeyCode.LeftControl) && canswing || characterControl.isSwing && canswing)
         {
-
-           
             if (transform.position.y > heightMax) return;
             Player.ins.animator.SetBool("IsSwing", true);
             if (startSwing) return;
@@ -69,7 +63,6 @@ public class PlayerSwing : MonoBehaviour
                 isSwing = false;
             }
             startSwing = true;
-          
         }
         else
         {
@@ -78,7 +71,6 @@ public class PlayerSwing : MonoBehaviour
                 startSwing = false;
                 canswing = false;
                 FinishSwing(0.5f);
-               
             }
             lineRenderer.enabled = false;
             Player.ins.animator.SetBool("IsJump", false);
@@ -87,7 +79,6 @@ public class PlayerSwing : MonoBehaviour
     }
     public void CanSwing()
     {
-        //if (isSwing) return;
         isSwing = true;
         if (GetComponent<SpringJoint>() == null)
         {
@@ -101,24 +92,17 @@ public class PlayerSwing : MonoBehaviour
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = swingPoint;
         float dis = Vector3.Distance(swingPoint, swingStartPoint.position);
-
         joint.maxDistance = dis * 0.8f;
         joint.minDistance = dis * 0.5f; ;
-
         joint.damper = 2;
         joint.massScale = 100f;
         joint.spring = 999f;
-        //_verticalVelocity = 0;
-        myTween = DOTween.To(() => currentdamping, x => currentdamping = x, 3, damping)
-           .SetEase(Ease.InCubic);
+        myTween = DOTween.To(() => currentdamping, x => currentdamping = x, 2, damping)
+        .SetEase(Ease.InQuad);
         lineRenderer.enabled = true;
         isjump = false;
        
 
-    }
-    public void HandleInput()
-    {
-        
     }
     public void Swing(CharacterControl characterControl)
     {
@@ -136,12 +120,11 @@ public class PlayerSwing : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
             Debug.Log(Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg);
             transform.rotation = Quaternion.Euler(0, angle, 0);
-            //transform.up = directionMove;
             if (isfall)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
-                currenforce = 3*force * Mathf.Clamp(swing,1,2);
-                currenfoward = 2*foward * Mathf.Clamp(swing, 1, 1.5f);
+               float currenforce = force *0.6f* Mathf.Clamp(swing,1,2);
+                float currenfoward = foward *0.6f* Mathf.Clamp(swing, 1, 1.5f);
                 directionMove = Vector3.up  * currenforce  + transform.forward * currenfoward + new Vector3(0.0f, _verticalVelocity, 0.0f);
 
             }
@@ -156,9 +139,9 @@ public class PlayerSwing : MonoBehaviour
                     FinishSwing(1f);
 
                 }
-                currenforce = force;
                 _verticalVelocity = 0;
-                directionMove = (swingPoint - swingStartPoint.position).normalized * currenforce * currentdamping + transform.forward * 3 * foward;
+                directionMove = (swingPoint - swingStartPoint.position).normalized * force * currentdamping + transform.forward * foward;
+
             }
             Player.ins.characterController.Move(directionMove*Time.deltaTime);
             return;
@@ -167,7 +150,7 @@ public class PlayerSwing : MonoBehaviour
         {
            
             Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
-            currenspeed = direction.magnitude * foward;
+            currenspeed = direction.magnitude * speed;
             _verticalVelocity += Gravity * Time.deltaTime;
 
         }
@@ -197,11 +180,6 @@ public class PlayerSwing : MonoBehaviour
         isfall = true;
         StartCoroutine(CouroutineDelaySwing(time));
     }
-    public void DelaySwing(float time)
-    {
-      
-        StartCoroutine(CouroutineDelaySwing(time));
-    }
    IEnumerator CouroutineDelaySwing(float time)
     {
         yield return new WaitForSeconds(time);
@@ -209,7 +187,7 @@ public class PlayerSwing : MonoBehaviour
         startSwing = false;
     }
 
-    private bool CheckForAngle(Vector3 pos, Vector3 source, Vector3 direction) //calculates the angle between the car and the waypoint 
+    private bool CheckForAngle(Vector3 pos, Vector3 source, Vector3 direction) 
     {
         Vector3 distance = (pos - source).normalized;
         float CosAngle = Vector3.Dot(distance, direction);

@@ -16,10 +16,6 @@ public class PlayerGetVehicle : MonoBehaviour
     {
         Player.ins.playerControl.characterControl.eventGetInVehicles += MoveToDoor;
     }
-    //private void Update()
-    //{
-    //    navMeshAgent.SetDestination(enterFormPos[side].position);
-    //}
     public Transform CheckEnterFromPos()
     {
         
@@ -54,7 +50,9 @@ public class PlayerGetVehicle : MonoBehaviour
     }
     public void MoveToDoor()
     {
+        Debug.Log("dxfcghbjnk");
         Player.ins.characterController.enabled = false;
+       
         navMeshAgent.enabled = true;
         vehicle = PlayerSensor.ins.VehiclesCollision;
         TakeEnterFromPos();
@@ -178,7 +176,8 @@ public class PlayerGetVehicle : MonoBehaviour
             Player.ins.ChangeControl(1);
             Player.ins.playerDriverCar.car = vehicle.GetComponent<Car>();
             Player.ins.playerDriverCar.GetInCar(enterFormPos[side]);
-            player.transform.parent = vehicle.GetComponent<Car>().driverSit;
+            Player.ins.animator.applyRootMotion = false;
+           
         }
         if (vehicle.CompareTag("Motor"))
         {

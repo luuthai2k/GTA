@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-    public class Player : MonoBehaviour
-    {
+public class Player : MonoBehaviour
+{
     public static Player ins;
     public SelectControl Control;
     public Animator animator;
@@ -22,24 +22,24 @@ using UnityEngine;
 
 
     void Awake()
-        {
-            ins = this;
+    {
+        ins = this;
 
-        }
-        private void Start()
-        {
-            //bone.SetActive(false);
-        }
-        public void ChangeControl(int i)
-        {
-            Control = (SelectControl)i;
+    }
+    private void Start()
+    {
+        //bone.SetActive(false);
+    }
+    public void ChangeControl(int i)
+    {
+        Control = (SelectControl)i;
         playerControl.enabled = false;
-            playerDriverCar.enabled = false;
-            playerDriverMotor.enabled = false;
-            playerDriverTank.enabled = false;
+        playerDriverCar.enabled = false;
+        playerDriverMotor.enabled = false;
+        playerDriverTank.enabled = false;
         playerDriverHelicopter.enabled = false;
-            switch (i)
-            {
+        switch (i)
+        {
             case 0:
                 playerControl.enabled = true;
                 break;
@@ -59,39 +59,39 @@ using UnityEngine;
                 playerControl.enabled = true;
                 break;
         }
-            ControlsManager.ins.ChangeControl(i);
-        }
-        public void OnRagdoll( )
-        {
-            //animator.enabled = false;
-            //rb.isKinematic = false;
-            //rb.AddForce(transform.forward, ForceMode.Impulse);
-            //bone.SetActive(true);
-
-        }
-        public void OffRagdoll()
-        {
-            //animator.enabled = true;
-            //rb.isKinematic = true;         
-            //bone.SetActive(false);
-
-        }
-
-
-
+        ControlsManager.ins.ChangeControl(i);
     }
-    public enum SelectControl
+    public void OnRagdoll()
     {
-        Charactor,
-        Car,
-        Motobike,
-        Bicycle,
-        Tank,
-        Copter,
-        Mech,
-        Aircraft
+        //animator.enabled = false;
+        //rb.isKinematic = false;
+        //rb.AddForce(transform.forward, ForceMode.Impulse);
+        //bone.SetActive(true);
 
     }
+    public void OffRagdoll()
+    {
+        //animator.enabled = true;
+        //rb.isKinematic = true;         
+        //bone.SetActive(false);
+
+    }
+
+
+
+}
+public enum SelectControl
+{
+    Charactor,
+    Car,
+    Motobike,
+    Bicycle,
+    Tank,
+    Copter,
+    Mech,
+    Aircraft
+
+}
 
 
 

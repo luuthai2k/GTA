@@ -4,7 +4,7 @@ using UnityEngine;
 public delegate void CharacterControlDelegate();
 public class CharacterControl : MonoBehaviour
 {
-  
+
     public event CharacterControlDelegate eventGetInVehicles;
     public Joystick joystick;
     public GameObject getInVehicles;
@@ -44,7 +44,12 @@ public class CharacterControl : MonoBehaviour
     }
     public void GetVehicles()
     {
-        eventGetInVehicles();
+       
+        if (eventGetInVehicles != null)
+        {
+            eventGetInVehicles();
+            Debug.Log("not mujll");
+        }
 
     }
     public void Swing()
