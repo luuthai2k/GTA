@@ -133,6 +133,7 @@ public class NPCAttack : MonoBehaviour
             npcControl.pointtarget = npcControl.enemy.transform;
             if (rangedWeapon != SelectWeapon.Unarmed )
             {
+
                 if (distance > 15)
                 {
                     if (isRanged )

@@ -16,40 +16,100 @@ public class PlayerClimb : MonoBehaviour
     public GameObject rig;
     public bool canclimb;
     public bool isPlane;
-    public bool isCornerUp;
-    public bool isCornerDown;
-
+    public bool isCorner;
+    public bool isGround;
+    public Vector3 target;
+    public bool cancheck = true;
+    private Vector3 rot;
+    public Vector3 climbDirection;
+    public float rad;
+    public float Gravity;
+    public float jumpHeight;
+    private float _verticalVelocity;
+    private bool isStartClimb;
+    public  bool isStart;
+    Vector3 directionJump;
     public bool CheckNearWall()
     {
         RaycastHit hit;
         if (Physics.Raycast(wallCheck.position, transform.forward, out hit, raydistance, wallMask))
         {
-            transform.rotation = Quaternion.LookRotation(-hit.normal);
+            rot = -hit.normal;
             return true;
         }
 
         return false;
 
     }
-
+    public void  StartClimb()
+    {
+        if (isStartClimb) return;
+        isStartClimb = true;
+        Player.ins.animator.applyRootMotion = false;
+        Player.ins.animator.SetBool("NearWall", true);
+      
+    }
     public void Climb(CharacterControl characterControl)
     {
-        Player.ins.animator.applyRootMotion = false;
-        if (CanClimb(characterControl.joystick.Horizontal, characterControl.joystick.Vertical))
+        StartClimb();
+        float h = characterControl.joystick.Horizontal;
+        float v = characterControl.joystick.Vertical;
+        canclimb = CanClimb(h, v);
+        Player.ins.animator.SetBool("NearWall", canclimb);
+       
+         if (canclimb)
         {
-            Player.ins.animator.SetFloat("Vertical", characterControl.joystick.Vertical);
-            Player.ins.animator.SetFloat("Horizontal", characterControl.joystick.Horizontal);
+
+            isStart = false;
+            Player.ins.animator.SetFloat("Vertical", v);
+            Player.ins.animator.SetFloat("Horizontal", h);
+            if (h + v != 0)
+            {
+                FreeLookCameraControl.ins.TargetHeading(true, 1, 0.5f);
+            }
+            if (characterControl.isSwing && !Player.ins.playerControl.isSwing)
+            {
+
+                transform.rotation = Quaternion.LookRotation(-rot);
+                Player.ins.animator.SetBool("NearWall", false);
+               
+                return;
+            }
+            if (isPlane)
+            {
+                Player.ins.characterController.Move(climbDirection * speed * Time.deltaTime);
+
+            }
+            if (isCorner)
+            {
+                MoveToTarget();
+            }
+            else
+            {
+                cancheck = true;
+            }
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(rot), speedrotate * Time.deltaTime);
+            transform.rotation = newRotation;
+
         }
         else
         {
-            Player.ins.animator.SetFloat("Vertical", 0);
-            Player.ins.animator.SetFloat("Horizontal", 0);
+            if (isGround)
+            {
+                JumpUptoGround(directionJump, 5);
+            }
+            else
+            {
+                transform.rotation = Quaternion.LookRotation(-rot);
+                JumpUptoGround(transform.forward, 5);
+            }
 
         }
     }
 
     public bool CanClimb(float h, float v)
     {
+        if (isCorner) return true;
         Vector3 _moveDirection = transform.right * h + transform.up * v;
         Vector3 origin = wallCheck.position;
         float _distance = raydistance;
@@ -58,9 +118,12 @@ public class PlayerClimb : MonoBehaviour
         Debug.DrawRay(origin, direction, Color.yellow);
         if (Physics.Raycast(origin, direction, out hit, raydistance, wallMask))
         {
-            transform.rotation = Quaternion.LookRotation(-hit.normal);
-            Player.ins.characterController.Move(_moveDirection * speed * Time.deltaTime);
-
+            rot = -hit.normal;
+            isCorner = true;
+            isPlane = false;
+            isGround = false;
+            cancheck = false;
+            target = hit.point + hit.normal * rad + Vector3.down * Vector3.Distance(transform.position,wallCheck.position);
             return true;
         }
 
@@ -70,20 +133,24 @@ public class PlayerClimb : MonoBehaviour
         Debug.DrawRay(origin, direction, Color.yellow);
         if (Physics.Raycast(origin, direction, out hit, raydistance, wallMask))
         {
-            transform.rotation = Quaternion.LookRotation(-hit.normal);
-            Player.ins.characterController.Move(_moveDirection * speed * Time.deltaTime);
+            climbDirection = _moveDirection;
+            isPlane = true;
+            isCorner = false;
+            isGround = false;
             return true;
         }
 
         origin += direction * dis2;
-        direction = -Vector3.up;
+        direction =Vector3.down;
         Debug.DrawRay(origin, direction, Color.yellow);
         if (Physics.Raycast(origin, direction, out hit, raydistance, wallMask))
         {
-            //Player.ins.animator.SetBool("UptoGround", true);
-            //transform.position = hit.point+Vector3.up*0.5f;
-            //tr/*ansform.rotation = Quaternion.LookRotation(-hit.normal);*/
-            //Player.ins.animator.SetBool("UptoGround", true);
+            directionJump = new Vector3(h, 0f, v);
+            float targetAngle = Mathf.Atan2(directionJump.normalized.x, directionJump.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            directionJump = new Vector3(0, targetAngle, 0);
+            isGround = true;
+            isPlane = false;
+            isCorner = false;
             return false;
 
         }
@@ -91,23 +158,47 @@ public class PlayerClimb : MonoBehaviour
         Debug.DrawRay(origin, direction, Color.yellow);
         if (Physics.Raycast(origin, direction, out hit, raydistance, wallMask))
         {
-            transform.rotation = Quaternion.LookRotation(-hit.normal);
-            transform.position = hit.point + hit.normal * 0.3f;
-            //Player.ins.characterController.Move(_moveDirection * speed * Time.deltaTime);
+            rot = -hit.normal;
+            Debug.LogError("Down");
+            isCorner = true;
+            isPlane = false;
+            isGround = false;
+            target = hit.point + hit.normal * rad+ Vector3.down * Vector3.Distance(transform.position, wallCheck.position);
+            cancheck = false;
             return true;
         }
-        return true;
+
+        return false ;
 
     }
-    IEnumerator JumpUptoGround(Vector3 postarget)
+    public void MoveToTarget()
     {
-        while (Vector3.Distance(transform.position, postarget) > 0.01f)
+        transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, target) < 0.001f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, postarget, speed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
-            Player.ins.animator.SetBool("UptoGround", true);
-
+           
+            isCorner = false;
+           
         }
-        yield return null;
+    }
+
+    public void JumpUptoGround(Vector3 direction ,float _speed)
+    {
+        StartJump();
+        _verticalVelocity += Gravity * Time.deltaTime;
+        Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(direction), speedrotate * Time.deltaTime);
+        transform.rotation = newRotation;
+        Player.ins.characterController.Move((transform.forward * _speed + new Vector3(0, _verticalVelocity,0)) * Time.deltaTime);
+      
+    }
+    public void StartJump()
+    {
+      
+        if (isStart) return;
+        isStart = true;
+        _verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * Gravity));
+       
+
+
     }
 }

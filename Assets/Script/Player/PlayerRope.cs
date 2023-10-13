@@ -17,21 +17,24 @@ public class PlayerRope : MonoBehaviour
     public bool isshootsilk;
     public bool ispull;
     public bool isrush;
+    public bool canpull;
+    public bool canrush;
     public float speed = 10f;
     public float height;
-    
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Q))
-    //    {
-    //        PrepareShoot();
-            
-    //    }
-    //    ShootSilk();
-    //}
+    public float dis;
+    public bool isRope;
+   
+    public void Rope(CharacterControl characterControl)
+    {
+       
+            PrepareShoot();
+        ShootSilk();
+    }
     public void PrepareShoot()
     {
-        Player.ins.animator.Play("web_shoot");
+        if (isRope) return;
+        isRope = true;
+        Player.ins.animator.Play("rope");
         collisionObj = PointCenterSceenToWorld.ins.CollisionObj;
         targetPoint = PointCenterSceenToWorld.ins.targetTransform.position;
         CheckCollision();
@@ -58,27 +61,25 @@ public class PlayerRope : MonoBehaviour
     }
     public void ShootSilk()
     {
-        if (!isshootsilk) return;
-        {
-            Player.ins.animator.SetBool("IsPull", ispull);
-            Player.ins.animator.SetBool("IsRush", isrush);
+        
             if (ispull)
             {
                 Pull();
-                
+                return;
             }
-            //else if(isrush)
-            //{
-            //    Rush();
-               
-            //}
-            else
+            else if (isrush)
             {
-                isshootsilk = false;
-            }
-            
+                Rush();
+                return;
 
-        }
+            }
+           
+       
+       
+
+
+
+
     }
     public void CheckCollision()
     {
@@ -103,10 +104,24 @@ public class PlayerRope : MonoBehaviour
             lineRenderer.SetPositions(new Vector3[] { startPoint.position, currentThreadEnd });
             yield return null;
         }
+
+        yield return new WaitForSeconds(0.5f);
         lineRenderer.enabled = false;
         isshootsilk = true;
+        CheckPullorRush();
         StartCoroutine(CollectLineRender());
         yield break;
+    }
+    public void CheckPullorRush()
+    {
+        if (ispull)
+        {
+            canpull = true;
+        }
+        if (ispull)
+        {
+            canrush = false;
+        }
     }
     IEnumerator CollectLineRender()
     {
@@ -132,21 +147,29 @@ public class PlayerRope : MonoBehaviour
 
     public void Pull()
     {
-       
-        Vector3 direction = transform.position + Vector3.up * height - targetPoint;
-        float angle = Vector3.Angle(new Vector3(direction.x, 0, direction.z), direction);
-        float angleInRadians = angle * Mathf.Deg2Rad;
-        float sinValue = Mathf.Sin(angleInRadians);
-        float v = Mathf.Sqrt(2 * height * 10 / sinValue);
+        Vector3 _target = transform.position + (collisionObj.transform.position - transform.position).normalized * dis;
+        Vector3 direction = _target - collisionObj.transform.position;
+        float distanceToTarget = direction.magnitude;
+        float angle = Vector3.Angle(transform.position - targetPoint, collisionObj.transform.forward);
+        Debug.Log(angle);
+        float initialVelocityY = Mathf.Sqrt(2 * height * Mathf.Abs(Physics.gravity.y));
+        float initialVelocityXZ = distanceToTarget / (Mathf.Sqrt(2 * height / Mathf.Abs(Physics.gravity.y)) + Mathf.Sqrt(2 * Mathf.Abs(distanceToTarget - height) / Mathf.Abs(Physics.gravity.y)));
+        Vector3 throwVelocity = direction.normalized * initialVelocityXZ;
+        throwVelocity.y = initialVelocityY;
+        Vector3 randomTorque = new Vector3(angle-90, 0, angle);
+
         if (collisionObj.GetComponent<Rigidbody>() != null)
         {
             rb = collisionObj.GetComponent<Rigidbody>();
-            float forceMagnitude = rb.mass *v;
-            rb.AddForce(direction * forceMagnitude);
-            ispull = false;
-            //isshootsilk = false;
+            rb.isKinematic = false;
+            rb.AddTorque(randomTorque*10,ForceMode.VelocityChange);
+            rb.velocity = throwVelocity;
+           
         }
+        canpull = false;
+        isshootsilk = false;
         ispull = false;
+        isRope = false;
 
     }
     public void Rush()
@@ -157,7 +180,7 @@ public class PlayerRope : MonoBehaviour
         if (direction.magnitude < 1f)
         {
             isrush = false;
-            //isshootsilk = false;
+            isRope = false;
         }
     }
   

@@ -38,7 +38,7 @@ public class ShootingTank : MonoBehaviour
     {
         foreach (GameObject bullet in bulletPool)
         {
-            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().bullet;
+            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().gameObject;
             if (!prefabbullet.activeInHierarchy)
             {
                 prefabbullet.SetActive(true);

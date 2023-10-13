@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.OnScreen;
@@ -9,33 +10,41 @@ using Cinemachine;
 
 public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
+    public static FreeLookCameraControl ins;
+    public CameraWhenShootLaser cameraWhenShootLaser;
     private Vector2 _playerTouchVectorOutput;
     private bool _isPlayerTouchingPanel;
-    private Touch _myTouch;
-    private int _touchID;
+    private Vector2 touchCurrentPosition;
     private Vector2 _lookInput;
-    [SerializeField] private float _touchSpeedSensitivity ;
-    //[SerializeField] private float _touchSpeedSensitivity = 3f;
+   public float _touchSpeedSensitivity ;
+    private float _speedRotate;
     [SerializeField] private SettingManager settingManager;
     private string _touchXMapTo = "Mouse X";
     private string _touchYMapTo = "Mouse Y";
+    public CinemachineFreeLook freeLookCam;
+    public int touchID;
+    public float _smoothingFactor=2;
+    public bool isTargetHeading;
+
     void Start()
     {
-        CinemachineCore.GetInputAxis = GetInputAxis;
+        ins = this;
         _touchSpeedSensitivity = settingManager.slider.value;
+        CinemachineCore.GetInputAxis = GetInputAxis;
+        
 
     }
-
+   
     private float GetInputAxis(string axisName)
     {
         _lookInput = PlayerJoystickOutputVector();
 
         if (axisName == _touchXMapTo)
-            return _lookInput.x * _touchSpeedSensitivity;
+            return _lookInput.x * _speedRotate;
 
         if (axisName == _touchYMapTo)
 
-            return _lookInput.y * _touchSpeedSensitivity;
+            return _lookInput.y * _speedRotate;
 
 
         return Input.GetAxis(axisName);
@@ -55,68 +64,72 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     {
         OutputVectorValue(Vector2.zero);
         _isPlayerTouchingPanel = false;
+        
     }
 
     public void OnPointerDown(PointerEventData _onPointerDownData)
     {
-        _touchSpeedSensitivity = settingManager.slider.value;
         OnDrag(_onPointerDownData);
-        _touchID = _myTouch.fingerId;
         _isPlayerTouchingPanel = true;
-      
+        touchCurrentPosition = _onPointerDownData.position;
+        TargetHeading(false, 1, 1);
     }
-    private void FixedUpdate()
+    private void Update()
     {
+        SetMousePostion();
+        if (_isPlayerTouchingPanel && Input.touchCount > 0)
+        {
 
-
+            Vector2 newtouchPosition = Input.GetTouch(touchID).position;
+            _speedRotate = Vector2.Distance(newtouchPosition, touchCurrentPosition) * _touchSpeedSensitivity;
+            touchCurrentPosition = newtouchPosition;
+            if (Input.GetTouch(touchID).phase == TouchPhase.Moved) return;
+            OutputVectorValue(Vector2.zero);
+        }
+        else
+        {
+            _speedRotate = 1;
+        }
+    }
+    public void SetMousePostion()
+    {
+        if (Input.touchCount == 0)
+        {
+            return;
+        }
         if (Input.touchCount > 0)
         {
-            for (int i = 0; i < Input.touchCount; i++)
+            touchID = 0;
+        }
+        if (Input.touchCount == 2)
+        {
+            if (Input.GetTouch(0).position.x > Input.GetTouch(1).position.x)
             {
-                _myTouch = Input.GetTouch(i);
-                if (_isPlayerTouchingPanel)
-                {
-                    if (_myTouch.fingerId == _touchID)
-                    {
-                        if (_myTouch.phase != TouchPhase.Moved)
-                            OutputVectorValue(Vector2.zero);
-                    }
-                }
+                touchID = 0;
+            }
+            else
+            {
+                touchID = 1;
             }
         }
-
     }
+
     public void OnDrag(PointerEventData _onDragData)
     {
-        OutputVectorValue(new Vector2(_onDragData.delta.normalized.x, _onDragData.delta.normalized.y));
+        Vector2 rawInput = new Vector2(_onDragData.delta.normalized.x, _onDragData.delta.normalized.y);
+        OutputVectorValue(Vector2.Lerp(_playerTouchVectorOutput, rawInput, _smoothingFactor));
     }
-    //public Image image;
-    //[SerializeField] private CinemachineFreeLook cinemachineFreeLook;
-    //private string _touchXMapTo = "Mouse X";
-    //private string _touchYMapTo = "Mouse Y";
-    //public void OnPointerUp(PointerEventData _onPointerUpData)
-    //{
-    //    cinemachineFreeLook.m_XAxis.m_InputAxisName = null;
-    //    cinemachineFreeLook.m_YAxis.m_InputAxisName = null;
-    //    cinemachineFreeLook.m_XAxis.m_InputAxisValue = 0;
-    //    cinemachineFreeLook.m_YAxis.m_InputAxisValue = 0;
-    //}
-
-    //public void OnPointerDown(PointerEventData _onPointerDownData)
-    //{
-    //    OnDrag(_onPointerDownData);
-
-    //}
-
-    //public void OnDrag(PointerEventData _onDragData)
-    //{
-    //    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(image.rectTransform, _onDragData.position, _onDragData.enterEventCamera, out Vector2 posOut))
-    //    {
-    //        cinemachineFreeLook.m_XAxis.m_InputAxisName = _touchXMapTo;
-    //        cinemachineFreeLook.m_YAxis.m_InputAxisName = _touchYMapTo;
-    //    }
-    //}
-
+    public void TargetHeading(bool enabled , float waitTime=1, float recenteringTime=1 )
+    {
+        freeLookCam.m_RecenterToTargetHeading.m_enabled = enabled;
+        freeLookCam.m_YAxisRecentering.m_enabled = enabled;
+        isTargetHeading = enabled;
+        freeLookCam.m_RecenterToTargetHeading.m_WaitTime = Mathf.Clamp(waitTime, 0.5f, waitTime);
+        freeLookCam.m_RecenterToTargetHeading.m_RecenteringTime = Mathf.Clamp(recenteringTime, 0.5f, recenteringTime);
+        freeLookCam.m_YAxisRecentering.m_WaitTime = Mathf.Clamp(waitTime, 0.5f, waitTime);
+        freeLookCam.m_YAxisRecentering.m_RecenteringTime = Mathf.Clamp(recenteringTime, 0.5f, recenteringTime);
+    }
+   
 }
 
 

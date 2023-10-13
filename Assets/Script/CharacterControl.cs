@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public delegate void CharacterControlDelegate();
 public class CharacterControl : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class CharacterControl : MonoBehaviour
     public Joystick joystick;
     public GameObject getInVehicles;
     public GameObject rope;
+    public Button _rope;
+    public Button _rocket;
     public bool isJump;
     public bool isAttack;
     public bool isSprint;
@@ -60,21 +63,33 @@ public class CharacterControl : MonoBehaviour
     {
         isSwing = false;
     }
-    public void ShotSilk()
+    public void Rope()
     {
         isRope = true;
+     
     }
-    public void FinishShotSilk()
+    public void FinishRope()
     {
         isRope = false;
     }
     public void Laser()
     {
-        isLaser = true;
+        if (isLaser)
+        {
+            isLaser = false;
+           
+        }
+        else
+        {
+            isLaser = true;
+          
+        }
+       
     }
     public void FinishLaser()
     {
         isLaser = false;
+        FreeLookCameraControl.ins.cameraWhenShootLaser.ReturnCamBase();
     }
     public void Rocket()
     {

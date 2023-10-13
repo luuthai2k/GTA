@@ -15,7 +15,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] float turnCalmTime = 1f;
     public float speedrotatesprint;
     private float angle;
-   
+    public float Gravity;
+    private float _verticalVelocity;
     public void OffRagdoll()
     {
 
@@ -36,22 +37,34 @@ public class PlayerMove : MonoBehaviour
             rot = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)), speedrotatesprint);
             return;
         }
-        foward = Mathf.Clamp01(direction.magnitude);
-            rot = Quaternion.Euler(0, angle, 0);
+        rot = Quaternion.Euler(0, angle, 0);
+        float CosAngle = Vector3.Dot(Quaternion.Euler(0, targetAngle, 0) * Vector3.forward, transform.forward);
+        float Angle = Mathf.Acos(CosAngle) * Mathf.Rad2Deg;
+        foward = direction.magnitude*(180-Angle)/180;
+         
        
     }
     public void Move(CharacterControl characterControl)
     {
         HandleInput(characterControl);
-        if (!Player.ins.animator.applyRootMotion)
+        if (playerControl.onSurface)
         {
-            Player.ins.animator.applyRootMotion = true;
+            if (!Player.ins.animator.applyRootMotion)
+            {
+                Player.ins.animator.applyRootMotion = true;
+            }
+            Player.ins.animator.SetFloat("Forward", foward);
+            Player.ins.animator.SetFloat("Turn", characterControl.joystick.Horizontal);
+            if (characterControl.joystick.Vertical != 0 || characterControl.joystick.Horizontal != 0 || characterControl.isSprint)
+            {
+                transform.rotation = rot;
+                FreeLookCameraControl.ins.TargetHeading(false, 1, 1f);
+            }
         }
-        Player.ins.animator.SetFloat("Forward", foward);
-        Player.ins.animator.SetFloat("Turn", characterControl.joystick.Horizontal);
-        //Player.ins.characterController.Move((transform.forward * currenspeed + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
-        if (characterControl.joystick.Vertical != 0 || characterControl.joystick.Horizontal != 0|| characterControl.isSprint)
+        else
         {
+            _verticalVelocity += Gravity * Time.deltaTime;
+            Player.ins.characterController.Move((transform.forward * speed*0.5f + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
             transform.rotation = rot;
         }
        

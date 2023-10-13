@@ -7,23 +7,23 @@ public class HeadLookAt : MonoBehaviour
 {
 
     public MultiAimConstraint multiAimConstraint;
-    public Transform player;  
-   
-    void Update()
+    public Transform player;
+
+    public void HeadLookAtToCenter()
     {
-        Vector3 cameraForward = Camera.main.transform.forward;    
+        Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 playerForward = player.forward;
         float dotProduct = Vector3.Dot(cameraForward.normalized, playerForward.normalized);
-        if (dotProduct > 0)
+        if (dotProduct >= 0)
         {
-            multiAimConstraint.weight = dotProduct + 0.5f;
+            multiAimConstraint.weight = dotProduct ;
         }
         else
         {
-            multiAimConstraint.weight = dotProduct + 0.5f;
+            multiAimConstraint.weight = 0;
         }
 
-      
+
 
     }
 }

@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     {
         if (HumanLayer == (HumanLayer | (1 << other.gameObject.layer)))
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }
         //gameObject.SetActive(false);
         

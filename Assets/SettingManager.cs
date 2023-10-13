@@ -6,43 +6,26 @@ using UnityEngine.EventSystems;
 
 public class SettingManager : MonoBehaviour
 {
-   
-        public Slider slider;
-        private RectTransform handleRect;
-        private float handleWidth;
+
+    public Slider slider;
+    private RectTransform handleRect;
+    private float handleWidth;
 
 
-        private void Start()
-        {
-          
-            handleRect = slider.handleRect;
-            handleWidth = handleRect.rect.width;
-        }
+    private void Start()
+    {
 
-
-        public void OnDrag(PointerEventData eventData)
-        {
-
-            if (IsPointerOverHandle(eventData))
-            {
-                UpdateSliderValue(eventData);
-
-            }
-
-        }
-
-        private bool IsPointerOverHandle(PointerEventData eventData)
-        {
-            Vector2 handleCenter = handleRect.position + new Vector3(handleWidth / 2, 0);
-            return Vector2.Distance(eventData.position, handleCenter) < handleWidth / 2;
-        }
-
-        private void UpdateSliderValue(PointerEventData eventData)
-        {
-            float sliderWidth = slider.GetComponent<RectTransform>().rect.width;
-            float normalizedValue = (eventData.position.x - slider.GetComponent<RectTransform>().position.x) / sliderWidth;
-            slider.value = Mathf.Clamp01(normalizedValue);
-        }
+        handleRect = slider.handleRect;
+        handleWidth = handleRect.rect.width;
+    }
 
    
+   
+    public void UpdateSpeedSensitivity()
+    {
+        FreeLookCameraControl.ins._touchSpeedSensitivity = slider.value;
+    }
+  
+
+
 }
