@@ -27,8 +27,8 @@ public class PlayerSwing : MonoBehaviour
     public bool startSwing;
     public float force;
     public float foward;
-    float currenforce ;
-    float currenfoward ;
+    float currenforce;
+    float currenfoward;
     public float shootsilk;
     public float damping;
     public float maxAngle;
@@ -45,7 +45,7 @@ public class PlayerSwing : MonoBehaviour
     }
     public void StartSwing(CharacterControl characterControl)
     {
-        
+
         if (Input.GetKey(KeyCode.LeftControl) && canswing || characterControl.isSwing && canswing)
         {
             if (transform.position.y > heightMax) return;
@@ -57,7 +57,7 @@ public class PlayerSwing : MonoBehaviour
             if (myTween != null)
             {
                 myTween.Kill();
-               
+
             }
             swingPoint = swingPivot.position;
             currentdamping = 0f;
@@ -93,7 +93,7 @@ public class PlayerSwing : MonoBehaviour
         {
             joint.enableCollision = true;
         }
-     
+
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = swingPoint;
         float dis = Vector3.Distance(swingPoint, swingStartPoint.position);
@@ -106,7 +106,7 @@ public class PlayerSwing : MonoBehaviour
         .SetEase(Ease.InQuad);
         lineRenderer.enabled = true;
         isjump = false;
-       
+
 
     }
     public void Swing(CharacterControl characterControl)
@@ -117,31 +117,31 @@ public class PlayerSwing : MonoBehaviour
         {
             Player.ins.animator.applyRootMotion = false;
             IsSwing();
-            Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f,characterControl.joystick.Vertical);
+            Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
             Vector3 directionMove = Vector3.zero;
             Player.ins.animator.SetFloat("Forward", Mathf.Clamp01(direction.magnitude));
             Player.ins.animator.SetFloat("Turn", characterControl.joystick.Horizontal);
-            float targetAngle = Mathf.Clamp(Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg,-60,60) + Camera.main.transform.eulerAngles.y;
+            float targetAngle = Mathf.Clamp(Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg, -60, 60) + Camera.main.transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
             if (direction.magnitude != 0)
             {
                 transform.rotation = Quaternion.Euler(0, angle, 0);
                 FreeLookCameraControl.ins.TargetHeading(true, 1, 1f);
             }
-           
+
             if (isfall)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
-                fall += Time.deltaTime*0.1f;
-                directionMove = transform.up * currenforce  + transform.forward * currenfoward + new Vector3(0.0f, _verticalVelocity, 0.0f);
+                fall += Time.deltaTime * 0.1f;
+                directionMove = transform.up * currenforce + transform.forward * currenfoward + new Vector3(0.0f, _verticalVelocity, 0.0f);
 
             }
             else
             {
                 swing += Time.deltaTime;
-                currenforce = force  * Mathf.Clamp( swing, 0.5f, 2f);
-                currenfoward = foward * Mathf.Clamp(direction.magnitude * swing, Mathf.Clamp( swing, 0.5f, 1.5f), 1.5f);
-                if (CheckForAngle(swingStartPoint.position,swingPoint))
+                currenforce = force * Mathf.Clamp(swing, 0.5f, 2f);
+                currenfoward = foward * Mathf.Clamp(direction.magnitude * swing, Mathf.Clamp(swing, 0.5f, 1.5f), 1.5f);
+                if (CheckForAngle(swingStartPoint.position, swingPoint))
                 {
                     startSwing = false;
                     canswing = false;
@@ -150,47 +150,48 @@ public class PlayerSwing : MonoBehaviour
                 }
 
                 _verticalVelocity = 0;
-                directionMove = transform.forward * foward*Mathf.Clamp(fall,1f, fall) +transform.up* force  *currentdamping;
+                directionMove = transform.forward * foward * Mathf.Clamp(fall, 1f, fall) + transform.up * force * currentdamping;
 
             }
-            Player.ins.characterController.Move(directionMove*Time.deltaTime);
+            Player.ins.characterController.Move(directionMove * Time.deltaTime);
             return;
         }
         else
         {
-           
+
             Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
             currenspeed = direction.magnitude * speed;
             _verticalVelocity += Gravity * Time.deltaTime;
             if (characterControl.isSprint)
             {
-                currenspeed =  speed*1.5f;
+                currenspeed = speed * 1.5f;
             }
             Player.ins.characterController.Move((transform.forward * currenspeed + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
         }
-       
+
     }
-    
+
 
     public void IsSwing()
     {
         if (!isSwing) return;
         StartCoroutine(UpdateLineRender());
         Player.ins.animator.SetFloat("Swing", swing);
-       
-       
+
+
     }
-   
+
     IEnumerator UpdateLineRender()
     {
 
-        while(isSwing){
+        while (isSwing)
+        {
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(1, swingStartPoint.position);
             lineRenderer.SetPosition(0, swingPoint);
             yield return null;
         }
-      
+
     }
     public void FinishSwing(float time)
     {
@@ -200,14 +201,14 @@ public class PlayerSwing : MonoBehaviour
         fall = 1.5f;
         StartCoroutine(CouroutineDelaySwing(time));
     }
-   IEnumerator CouroutineDelaySwing(float time)
+    IEnumerator CouroutineDelaySwing(float time)
     {
         yield return new WaitForSeconds(time);
         canswing = true;
         startSwing = false;
     }
 
-    private bool CheckForAngle(Vector3 pos, Vector3 source) 
+    private bool CheckForAngle(Vector3 pos, Vector3 source)
     {
         Vector3 direction = pos - source;
 

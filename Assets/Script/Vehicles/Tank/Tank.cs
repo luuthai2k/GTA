@@ -173,12 +173,7 @@ public class Tank : MonoBehaviour
             targetXAngle -= 360f;
         }
         float clampedXAngle = Mathf.Clamp(targetXAngle, maxGunAngle_elevation, minGunAngle_depression);
-        Quaternion newrotate= Quaternion.RotateTowards(barrel.transform.localRotation, Quaternion.Euler(clampedXAngle, 0f, 0f), speed * Time.deltaTime);
-        barrel.transform.localRotation = newrotate;
-
-
-        Debug.Log(clampedXAngle);
-
+        barrel.transform.localRotation = Quaternion.Euler(clampedXAngle, 0f, 0f);
 
     }
 }

@@ -39,5 +39,4 @@ public class BulletPooling : MonoBehaviour
         Pool.Add(newpoolObj);
         return newpoolObj;
     }
-
 }

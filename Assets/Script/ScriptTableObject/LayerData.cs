@@ -10,4 +10,11 @@ public class LayerData : ScriptableObject
     public LayerMask WoodLayer;
     public LayerMask VehiclesLayer;
     public LayerMask ObstacleLayer;
+    public LayerMask Ground;
+    public LayerMask PlayerSensor;
+    public LayerMask NPCSensor;
+    public LayerMask Surface;
+    public LayerMask AimColliderMask;
+    public LayerMask WallMask;
+
 }

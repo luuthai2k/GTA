@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using static Unity.VisualScripting.Member;
+using static UnityEditor.PlayerSettings;
 
 public class FindThePath : MonoBehaviour
 {
@@ -60,16 +62,17 @@ public class FindThePath : MonoBehaviour
 
             if (currentWayPoint < waypoints.Count) 
             {
-                PostionToFollow = waypoints[currentWayPoint];
 
+                PostionToFollow = waypoints[currentWayPoint];
                 if (Vector3.Distance(_transform.position, PostionToFollow) < 2)
                     currentWayPoint++;
                 if (Vector3.Distance(waypoints[waypoints.Count-1], pointtarget.position) > 10)
                 {
-                    currentWayPoint = 0;
-                    waypoints.Clear();
+                    //currentWayPoint = 0;
+                    //waypoints.Clear();
                 }
-                   
+
+                
             }
 
             if (currentWayPoint >= waypoints.Count - 3)
@@ -181,12 +184,14 @@ public class FindThePath : MonoBehaviour
 
         void Calculate(Vector3 destination, Vector3 sourcePostion, Vector3 direction, int NavMeshAreaBite)
         {
-            if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 150, NavMeshAreaBite) &&
+            if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 200, NavMeshAreaBite) &&
                 NavMesh.CalculatePath(sourcePostion, hit.position, NavMeshAreaBite, path))
             {
-                if (path.corners.ToList().Count() > 1 )
+                if (path.corners.ToList().Count() > 1)
                 {
+
                     waypoints.AddRange(path.corners.ToList());
+                   
                  
                 }
                 else
@@ -194,7 +199,8 @@ public class FindThePath : MonoBehaviour
                     if (path.corners.Length > 2 )
                     {
                         waypoints.AddRange(path.corners.ToList());
-                       
+
+                    
                     }
                     else
                     {

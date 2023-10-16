@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Diagnostics;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
     public PlayerState playerState;
-
     public PlayerRigControl playerRigControl;
     public CharacterControl characterControl;
     public PlayerMove playerMove;
@@ -15,8 +15,8 @@ public class PlayerControl : MonoBehaviour
     public PlayerAttack playerAttack;
     public PlayerShootRoket playerShootRoket;
     public PlayerShootLaser playerShootLaser;
+    public PlayerSwim playerSwim;
     [Header("On Ground ")]
-    public LayerMask surfaceMask;
     public bool onSurface;
     public bool top;
     public bool bot;
@@ -24,16 +24,25 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float surfaceDistance = 1.2f;
     public bool isSwing;
     private float timedelay;
-   
-    private void Update()
+
+
+
+    void Update()
     {
-        HandleInput();
-        CheckOnGround();
+        if (playerState != PlayerState.Dead)
+        {
+            HandleInput();
+            if (playerState != PlayerState.Swimming)
+            {
+                CheckOnGround();
+            }
+        }
+
         HandleState();
     }
     public void CheckOnGround()
     {
-        onSurface = Physics.Raycast(surfaceCheck.position, Vector3.down, surfaceDistance, surfaceMask);
+        onSurface = Physics.Raycast(surfaceCheck.position, Vector3.down, surfaceDistance, GameManager.ins.layerData.Surface);
         Player.ins.animator.SetBool("OnGround", onSurface);
         if (onSurface)
         {
@@ -60,7 +69,7 @@ public class PlayerControl : MonoBehaviour
                 playerSwing.Swing(characterControl);
                 break;
             case PlayerState.Rope:
-                playerRope.Rope(characterControl);
+                //npcControl.DoFallAction();
                 break;
             case PlayerState.Attack:
                 playerAttack.Attack(characterControl.isAttack);
@@ -71,6 +80,12 @@ public class PlayerControl : MonoBehaviour
             case PlayerState.Laser:
                 playerShootLaser.ShootLaser();
                 break;
+            case PlayerState.Swimming:
+                playerSwim.Swim(characterControl);
+                break;
+            case PlayerState.Dead:
+
+                break;
             //case SelectState.Driver:
             //    npcControl.DoDriver();
             //    break;
@@ -80,7 +95,7 @@ public class PlayerControl : MonoBehaviour
     }
     public void HandleInput()
     {
-       
+
         if (characterControl.isRope || Input.GetKey(KeyCode.R))
         {
             ChangeState(PlayerState.Rope);
@@ -88,27 +103,31 @@ public class PlayerControl : MonoBehaviour
         }
         if (characterControl.isSwing || Input.GetKey(KeyCode.LeftControl))
         {
-           
-            if (playerClimb.CheckNearWall()&& !onSurface)
+
+            if (playerClimb.CheckNearWall() && !onSurface)
             {
                 ChangeState(PlayerState.Climb);
                 return;
             }
             if (playerState == PlayerState.Climb)
             {
-                 timedelay+= Time.deltaTime;
+                timedelay += Time.deltaTime;
                 if (timedelay >= 0.5f)
                 {
                     timedelay = 0;
                     ChangeState(PlayerState.Swing);
                     isSwing = true;
-                   
+
                 }
                 return;
             }
             ChangeState(PlayerState.Swing);
             isSwing = true;
             return;
+        }
+        else if (characterControl.isSwimming || Input.GetKey(KeyCode.W))
+        {
+            playerState = PlayerState.Swimming;
         }
         else
         {
@@ -141,12 +160,13 @@ public class PlayerControl : MonoBehaviour
                     return;
                 }
                 ChangeState(PlayerState.Move);
-                
+
             }
-            
+
         }
-        
+
     }
+   
     public void ChangeState(PlayerState _playerState)
     {
         if (playerState == _playerState) return;
@@ -188,8 +208,8 @@ public enum PlayerState
     Fall,
     Attack,
     Rocket,
-    Laser
-
-
+    Laser,
+    Swimming,
+    Dead
 
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PointAIMove : MonoBehaviour
 {
+  
     public SelectPoint selectPoint;
     public List<Transform> nextpoint;
     public NPCPooling npcPooling;
@@ -16,11 +17,16 @@ public class PointAIMove : MonoBehaviour
     public Transform _nextpoint;
     void Start()
     {
-        _nextpoint = RandomNextPoint();
-        time =Random.Range(mintime, maxtime);
-        StartCoroutine(SpawnNPCCouroutine());
-       
+        Init();      
     }
+
+    public void Init()
+    {
+        _nextpoint = RandomNextPoint();
+        time = Random.Range(mintime, maxtime);
+        StartCoroutine(SpawnNPCCouroutine());
+    }
+
     public Transform RandomNextPoint()
     {
         if (nextpoint.Count > 0)
@@ -39,13 +45,11 @@ public class PointAIMove : MonoBehaviour
     }
     IEnumerator SpawnNPCCouroutine()
     {
-
         yield return new WaitForSeconds(time);
         float dis = Vector3.Distance(transform.position, Player.ins.transform.position);
         if (dis < mindistance || dis > maxdistance||!NPCManager.ins.CheckCanSpawn())
         {
             yield break;
-
         }
         GameObject newnpc = npcPooling.GetPool(transform.position);
         
@@ -53,13 +57,15 @@ public class PointAIMove : MonoBehaviour
         npcControl.pointtarget = RandomNextPoint();
         newnpc.transform.LookAt(_nextpoint);
         npcControl.lastpoint = transform;
-        if (selectPoint ==SelectPoint.Walk)
+      
+        if (selectPoint == SelectPoint.Walk)
         {
             npcControl.npcState.ChangeState(SelectState.Move);
         }
         else if (selectPoint == SelectPoint.Drive)
         {
             npcControl.npcState.ChangeState(SelectState.Driver);
+            npcControl.transform.parent.GetComponent<Car>().npcDrive = npcControl;
         }
         yield return new WaitForSeconds(timedelay);
         StartCoroutine(SpawnNPCCouroutine());

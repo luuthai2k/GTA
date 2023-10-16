@@ -19,13 +19,12 @@ public class SettingManager : MonoBehaviour
         handleWidth = handleRect.rect.width;
     }
 
-   
-   
+
+
     public void UpdateSpeedSensitivity()
     {
         FreeLookCameraControl.ins._touchSpeedSensitivity = slider.value;
     }
-  
 
 
 }

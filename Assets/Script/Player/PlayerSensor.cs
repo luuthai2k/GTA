@@ -9,6 +9,8 @@ public class PlayerSensor : MonoBehaviour
     public GameObject VehiclesCollision;
     public GameObject enemy;
     public LayerMask enemylayerMask;
+    public CharacterControl characterControl;
+    public PlayerControl playerControl;
     private void Awake()
     {
         ins = this;
@@ -33,18 +35,18 @@ public class PlayerSensor : MonoBehaviour
            
         }
         if (other.gameObject.layer == LayerMask.NameToLayer("Water"))
-        {
-            Debug.Log("Enter_Human");
+        {      
+            characterControl.Swimming();
+            Player.ins.animator.SetBool("OnGround", false);
 
         }
-
 
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Vehicles"))
         {
-            Debug.Log("Exit_Car");
+         
             ControlsManager.ins.Control[0].GetComponent<CharacterControl>().getInVehicles.SetActive(false);
         }
         if (enemylayerMask == (enemylayerMask | (1 << other.gameObject.layer)))
@@ -52,7 +54,12 @@ public class PlayerSensor : MonoBehaviour
 
             enemy = null;
 
-
+        }
+        if(other.gameObject.layer == LayerMask.NameToLayer("Water"))
+        {
+            characterControl.EndSwimming();
+            Player.ins.animator.SetInteger("IsSwimming", 0);
+            playerControl.ChangeState(PlayerState.Move);
         }
     }
 }

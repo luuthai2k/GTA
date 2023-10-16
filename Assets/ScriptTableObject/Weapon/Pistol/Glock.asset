@@ -19,4 +19,4 @@ MonoBehaviour:
   _startTime: 0
   _clipSize: 10
   _power: 10000
-  _bullet: {fileID: 8708013097892484670, guid: abb31714c8b9f3443a508d73f1329bb1, type: 3}
+  _bullet: {fileID: 8708013097892484670, guid: 57b11185bcb3d5546b78a767b9ce4715, type: 3}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.AI;
 
 public class Car : MonoBehaviour
 {
@@ -38,7 +39,8 @@ public class Car : MonoBehaviour
     public float breakingForce = 500f;
     public float breakingForceMax = 1000f;
 
-
+    public NPCControl npcDrive;
+    public NavMeshObstacle carObstacle;
 
     public void MoveVehicle(float Vertical,float speed)
     {
@@ -114,7 +116,6 @@ public class Car : MonoBehaviour
         backRightWheelCollider.brakeTorque = breakingForce;
         backLeftWheelCollider.brakeTorque = breakingForce;
     }
-
 
     
 }

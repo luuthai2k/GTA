@@ -16,14 +16,14 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     private bool _isPlayerTouchingPanel;
     private Vector2 touchCurrentPosition;
     private Vector2 _lookInput;
-   public float _touchSpeedSensitivity ;
+    public float _touchSpeedSensitivity;
     private float _speedRotate;
     [SerializeField] private SettingManager settingManager;
     private string _touchXMapTo = "Mouse X";
     private string _touchYMapTo = "Mouse Y";
     public CinemachineFreeLook freeLookCam;
     public int touchID;
-    public float _smoothingFactor=2;
+    public float _smoothingFactor = 2;
     public bool isTargetHeading;
 
     void Start()
@@ -31,10 +31,10 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         ins = this;
         _touchSpeedSensitivity = settingManager.slider.value;
         CinemachineCore.GetInputAxis = GetInputAxis;
-        
+
 
     }
-   
+
     private float GetInputAxis(string axisName)
     {
         _lookInput = PlayerJoystickOutputVector();
@@ -64,7 +64,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     {
         OutputVectorValue(Vector2.zero);
         _isPlayerTouchingPanel = false;
-        
+
     }
 
     public void OnPointerDown(PointerEventData _onPointerDownData)
@@ -119,7 +119,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         Vector2 rawInput = new Vector2(_onDragData.delta.normalized.x, _onDragData.delta.normalized.y);
         OutputVectorValue(Vector2.Lerp(_playerTouchVectorOutput, rawInput, _smoothingFactor));
     }
-    public void TargetHeading(bool enabled , float waitTime=1, float recenteringTime=1 )
+    public void TargetHeading(bool enabled, float waitTime = 1, float recenteringTime = 1)
     {
         freeLookCam.m_RecenterToTargetHeading.m_enabled = enabled;
         freeLookCam.m_YAxisRecentering.m_enabled = enabled;
@@ -129,7 +129,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         freeLookCam.m_YAxisRecentering.m_WaitTime = Mathf.Clamp(waitTime, 0.5f, waitTime);
         freeLookCam.m_YAxisRecentering.m_RecenteringTime = Mathf.Clamp(recenteringTime, 0.5f, recenteringTime);
     }
-   
+
 }
 
 

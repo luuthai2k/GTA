@@ -6,17 +6,8 @@ public class HitBox : MonoBehaviour
 {
     public LayerMask enemylayerMask;
     public PlayerAttack playerAttack;
+    public int dame;
     
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (enemylayerMask == (enemylayerMask | (1 << other.gameObject.layer)))
@@ -25,8 +16,8 @@ public class HitBox : MonoBehaviour
             if (other.GetComponent<NPCHP>() != null)
             {
                 playerAttack.OffHitBox();
-                other.GetComponent<NPCHP>().hitDame(10);
-                Debug.Log("hit");
+                other.GetComponent<NPCHP>().HitDame(dame,Vector3.zero);
+                
             }
            
         }

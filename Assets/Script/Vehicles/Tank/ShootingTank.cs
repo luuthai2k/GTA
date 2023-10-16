@@ -20,8 +20,6 @@ public class ShootingTank : MonoBehaviour
         ray.origin = barrelOut.transform.position;
         ray.direction = barrelOut.transform.forward;
 
-        Debug.DrawRay(ray.origin, ray.direction * 200f, Color.green);
-
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f))
         {
            
@@ -38,7 +36,7 @@ public class ShootingTank : MonoBehaviour
     {
         foreach (GameObject bullet in bulletPool)
         {
-            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().gameObject;
+            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().bullet;
             if (!prefabbullet.activeInHierarchy)
             {
                 prefabbullet.SetActive(true);

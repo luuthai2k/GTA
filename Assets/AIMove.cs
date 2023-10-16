@@ -67,12 +67,8 @@ public class AIMove : MonoBehaviour
             }
             yield return new WaitForSeconds(aiController.timedelay);
         }
-       
-            
-        
-       
-    }
-   
+                       
+    } 
   
     public void NextState()
     {
@@ -85,14 +81,11 @@ public class AIMove : MonoBehaviour
             {
                 pointtarget = pointtarget.gameObject.GetComponent<PointAIMove>().RandomNextPoint();
                 Move( 0.5f);
-
             }
             else
             {
 
                 AIController.ins.aiState.ChangeState(SelectState.Idle);
-
-
             }
         }
     }

@@ -30,3 +30,21 @@ MonoBehaviour:
   ObstacleLayer:
     serializedVersion: 2
     m_Bits: 253952
+  Ground:
+    serializedVersion: 2
+    m_Bits: 4194304
+  PlayerSensor:
+    serializedVersion: 2
+    m_Bits: 0
+  NPCSensor:
+    serializedVersion: 2
+    m_Bits: 0
+  Surface:
+    serializedVersion: 2
+    m_Bits: 5242880
+  AimColliderMask:
+    serializedVersion: 2
+    m_Bits: 8388094
+  WallMask:
+    serializedVersion: 2
+    m_Bits: 1048576

@@ -6,7 +6,6 @@ public class PointCenterSceenToWorld : MonoBehaviour
 {
 
     public static PointCenterSceenToWorld ins;
-    [SerializeField] private LayerMask _aimColliderMask;  
     public Transform targetTransform;
     public GameObject CollisionObj;
     private Camera _mainCamera;
@@ -27,7 +26,7 @@ public class PointCenterSceenToWorld : MonoBehaviour
        
 
 
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 500f, _aimColliderMask))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 500f, GameManager.ins.layerData.AimColliderMask))
         {
             float distance = Vector3.Distance(_mainCamera.transform.position, raycastHit.point)- Vector3.Distance(_mainCamera.transform.position, Player.ins.transform.position);
             if (distance > 0)

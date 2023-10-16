@@ -27,8 +27,6 @@ public class PlayerGetVehicle : MonoBehaviour
             {
                 side = 0;
                 return enterFormPos[0];
-
-
             }
             else
             {
@@ -50,7 +48,7 @@ public class PlayerGetVehicle : MonoBehaviour
     }
     public void MoveToDoor()
     {
-        Debug.Log("dxfcghbjnk");
+    
         Player.ins.characterController.enabled = false;
        
         navMeshAgent.enabled = true;
@@ -110,7 +108,7 @@ public class PlayerGetVehicle : MonoBehaviour
             //Debug.Log("turn");
             //if (!Physics.Raycast(ray, out hit, 0.5f, obstacleMask))
             //{
-            //    targetRotation = Quaternion.LookRotation(direction, Vector3.up);            
+            //    targetRotation = Quaternion.LookRotation(direction, Vector3.up);
 
             //}
             //else
@@ -128,15 +126,11 @@ public class PlayerGetVehicle : MonoBehaviour
             //}
             //targetRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0);
             //player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 5f * Time.deltaTime);
-            Player.ins.animator.SetFloat("Forward", 1);
-
-
+            //Player.ins.animator.SetFloat("Forward", 1);
             yield return null;
         }
         navMeshAgent.enabled = false;
         GetInVehicle();
-
-
     }
     private Vector3 FindAvoidDirection(Vector3 direction)
     {
@@ -149,7 +143,7 @@ public class PlayerGetVehicle : MonoBehaviour
         {
             Vector3 rayDirection = Quaternion.Euler(0f, angleStep * i, 0f) * direction;
             Ray ray = new Ray(player.transform.position + Vector3.up, rayDirection);
-            Debug.DrawRay(ray.origin, ray.direction * 1f, Color.green);
+      
             if (!Physics.Raycast(ray, 5f, obstacleMask))
             {
                 // Tính góc giữa hai hướng
@@ -168,7 +162,6 @@ public class PlayerGetVehicle : MonoBehaviour
     }
     public void GetInVehicle()
     {
-
         vehicle.GetComponent<Rigidbody>().isKinematic = false;
         player.transform.parent = vehicle.transform;
         if (vehicle.CompareTag("Car"))
@@ -177,7 +170,6 @@ public class PlayerGetVehicle : MonoBehaviour
             Player.ins.playerDriverCar.car = vehicle.GetComponent<Car>();
             Player.ins.playerDriverCar.GetInCar(enterFormPos[side]);
             Player.ins.animator.applyRootMotion = false;
-           
         }
         if (vehicle.CompareTag("Motor"))
         {
@@ -203,20 +195,25 @@ public class PlayerGetVehicle : MonoBehaviour
         CameraManager.ins.ChangeCam(0, transform);
         player.transform.parent = null;
         if (vehicle.CompareTag("Car"))
-        {
+        {     
             Player.ins.playerDriverCar.GetOutCar();
+            Player.ins.ChangeControl(0);
+            
         }
         if (vehicle.CompareTag("Motor"))
         {
             Player.ins.playerDriverMotor.GetOutMotor();
+            Player.ins.ChangeControl(0);
         }
         if (vehicle.CompareTag("Tank"))
         {
             Player.ins.playerDriverTank.GetOutTank();
+            Player.ins.ChangeControl(0);
         }
         if (vehicle.CompareTag("Helicopter"))
         {
             Player.ins.playerDriverHelicopter.GetOutHelicopter();
+            Player.ins.ChangeControl(0);
         }
     }
    

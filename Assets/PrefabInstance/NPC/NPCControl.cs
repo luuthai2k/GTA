@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 
 public class NPCControl : MonoBehaviour
-{ 
+{
     public static NPCControl ins;
     public NavMeshAgent navMeshAgent;
     public NPCState npcState;
@@ -19,6 +19,7 @@ public class NPCControl : MonoBehaviour
     public NPCAttack npcAttack;
     public NPCDriver npcDriver;
     public float timedelay;
+    public NPCHP npcHp;
     private void Awake()
     {
         ins = this;
@@ -34,6 +35,15 @@ public class NPCControl : MonoBehaviour
         {
             npcState.ChangeState(SelectState.Attack);
         }
+    
+        
+    }
+
+    public float DistancePlayer()
+    {
+        float distance = Vector3.Distance(transform.position, Player.ins.transform.position);
+
+        return distance;
     }
     public void DoIdleAction()
     {
@@ -43,7 +53,7 @@ public class NPCControl : MonoBehaviour
 
     public void DoMoveAction()
     {
-       
+
         timedelay = 1f;
         npcMovement.canmove = true;
         npcMovement.Move(0.5f);
@@ -75,4 +85,7 @@ public class NPCControl : MonoBehaviour
         npcDriver.candriver = true;
         npcDriver.DriverVehicle();
     }
+
+
+
 }

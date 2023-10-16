@@ -8,10 +8,12 @@ public class RangedWeapon : MonoBehaviour
     private ParticleSystem hitEffect;
     public WeaponData WeaponData;
     public Transform muzzle;
+    public Transform spawnBullet;
     private ParticleSystem flash;
     public float fireRate = 0;
     public float startTime;
     Ray ray;
+
     private void Start()
     {
         HumanLayer = GameManager.ins.layerData.HumanLayer;
@@ -23,9 +25,6 @@ public class RangedWeapon : MonoBehaviour
         //    {
         //        StartShooting();
         //    }
-
-
-
     }
     public void StartShooting(Vector3 direction)
     {
@@ -40,8 +39,6 @@ public class RangedWeapon : MonoBehaviour
             //Invoke("Shooting", 0.1f);
             Shooting(direction);
         }
-
-
     }
     public void Shooting(Vector3 direction)
     {
@@ -61,8 +58,10 @@ public class RangedWeapon : MonoBehaviour
             flash.gameObject.transform.localScale = Vector3.one;
             flash.gameObject.transform.forward = muzzle.forward;
             FxPooling.ins.ReturnPool(flash, 0.5f);
+    
             var bullet = Instantiate(WeaponData._bullet, pos, Quaternion.identity);
             HitCheck(direction);
+            Player.ins.playerHP.OnHit(HitDameState.Weapon, false, 10,Vector3.zero);
             bullet.GetComponent<Rigidbody>().AddForce(direction * WeaponData._power);
             Player.ins.animator.SetBool("RangedWeaponShoot", true);
 
@@ -91,10 +90,6 @@ public class RangedWeapon : MonoBehaviour
                 hitEffect.gameObject.transform.LookAt(muzzle);
 
             }
-
-
-
-
         }
     }
     public void FinishShooting()

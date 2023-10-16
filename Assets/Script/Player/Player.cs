@@ -19,7 +19,9 @@ public class Player : MonoBehaviour
     public PlayerDriverTank playerDriverTank;
     public PlayerDriverHelicopter playerDriverHelicopter;
     public Joystick joystick;
-
+    public PlayerHP playerHP;
+    public PlayerSensor playerSensor;
+    public PlayerMove playerMove;
 
     void Awake()
     {

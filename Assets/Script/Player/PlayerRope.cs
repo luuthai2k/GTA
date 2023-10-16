@@ -23,11 +23,11 @@ public class PlayerRope : MonoBehaviour
     public float height;
     public float dis;
     public bool isRope;
-   
+
     public void Rope(CharacterControl characterControl)
     {
-       
-            PrepareShoot();
+
+        PrepareShoot();
         ShootSilk();
     }
     public void PrepareShoot()
@@ -39,43 +39,43 @@ public class PlayerRope : MonoBehaviour
         targetPoint = PointCenterSceenToWorld.ins.targetTransform.position;
         CheckCollision();
         StartCoroutine(CouroutineRotate());
-       
+
     }
     IEnumerator CouroutineRotate()
     {
-        while(transform.rotation!= Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)))
+        while (transform.rotation != Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)))
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)), 20);
             yield return null;
         }
-        yield  break;
+        yield break;
     }
     public void StartShootSilk()
     {
         lineRenderer.enabled = true;
         currentThreadEnd = startPoint.position;
-        
+
         StartCoroutine(UpdateLineRender());
-        
+
 
     }
     public void ShootSilk()
     {
-        
-            if (ispull)
-            {
-                Pull();
-                return;
-            }
-            else if (isrush)
-            {
-                Rush();
-                return;
 
-            }
-           
-       
-       
+        if (ispull)
+        {
+            Pull();
+            return;
+        }
+        else if (isrush)
+        {
+            Rush();
+            return;
+
+        }
+
+
+
 
 
 
@@ -87,7 +87,7 @@ public class PlayerRope : MonoBehaviour
         {
             ispull = true;
             isrush = false;
-           
+
         }
         else
         {
@@ -125,12 +125,12 @@ public class PlayerRope : MonoBehaviour
     }
     IEnumerator CollectLineRender()
     {
-      
+
         while (Vector3.Distance(currentThreadEnd, startPoint.position) > 0.1f)
         {
             if (isrush)
             {
-               
+
                 lineRenderer.SetPositions(new Vector3[] { startPoint.position, currentThreadEnd });
             }
             else
@@ -140,7 +140,7 @@ public class PlayerRope : MonoBehaviour
             }
             yield return null;
         }
-        
+
         lineRenderer.enabled = false;
         yield break;
     }
@@ -156,15 +156,15 @@ public class PlayerRope : MonoBehaviour
         float initialVelocityXZ = distanceToTarget / (Mathf.Sqrt(2 * height / Mathf.Abs(Physics.gravity.y)) + Mathf.Sqrt(2 * Mathf.Abs(distanceToTarget - height) / Mathf.Abs(Physics.gravity.y)));
         Vector3 throwVelocity = direction.normalized * initialVelocityXZ;
         throwVelocity.y = initialVelocityY;
-        Vector3 randomTorque = new Vector3(angle-90, 0, angle);
+        Vector3 randomTorque = new Vector3(angle - 90, 0, angle);
 
         if (collisionObj.GetComponent<Rigidbody>() != null)
         {
             rb = collisionObj.GetComponent<Rigidbody>();
             rb.isKinematic = false;
-            rb.AddTorque(randomTorque*10,ForceMode.VelocityChange);
+            rb.AddTorque(randomTorque * 10, ForceMode.VelocityChange);
             rb.velocity = throwVelocity;
-           
+
         }
         canpull = false;
         isshootsilk = false;
@@ -183,5 +183,5 @@ public class PlayerRope : MonoBehaviour
             isRope = false;
         }
     }
-  
+
 }

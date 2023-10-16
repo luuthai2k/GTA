@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.AI;
+
 public delegate void CharacterControlDelegate();
 public class CharacterControl : MonoBehaviour
 {
@@ -10,8 +11,6 @@ public class CharacterControl : MonoBehaviour
     public Joystick joystick;
     public GameObject getInVehicles;
     public GameObject rope;
-    public Button _rope;
-    public Button _rocket;
     public bool isJump;
     public bool isAttack;
     public bool isSprint;
@@ -19,6 +18,7 @@ public class CharacterControl : MonoBehaviour
     public bool isRope;
     public bool isLaser;
     public bool isRocket;
+    public bool isSwimming;
     public void Jump()
     {
         isJump = true;
@@ -51,9 +51,14 @@ public class CharacterControl : MonoBehaviour
         if (eventGetInVehicles != null)
         {
             eventGetInVehicles();
-            Debug.Log("not mujll");
+            Player.ins.animator.SetBool("IsWalkInCar", true);
+    
+            if(Player.ins.playerSensor.VehiclesCollision.GetComponent<NavMeshObstacle>() != null)
+            {
+                Player.ins.playerSensor.VehiclesCollision.GetComponent<NavMeshObstacle>().enabled = true;
+            }
+           
         }
-
     }
     public void Swing()
     {
@@ -63,12 +68,11 @@ public class CharacterControl : MonoBehaviour
     {
         isSwing = false;
     }
-    public void Rope()
+    public void ShotSilk()
     {
         isRope = true;
-     
     }
-    public void FinishRope()
+    public void FinishShotSilk()
     {
         isRope = false;
     }
@@ -77,14 +81,14 @@ public class CharacterControl : MonoBehaviour
         if (isLaser)
         {
             isLaser = false;
-           
+
         }
         else
         {
             isLaser = true;
-          
+
         }
-       
+
     }
     public void FinishLaser()
     {
@@ -98,5 +102,15 @@ public class CharacterControl : MonoBehaviour
     public void FinishRocket()
     {
         isRocket = false;
+    }
+
+    public void Swimming()
+    {
+        isSwimming = true;   
+    }
+
+    public void EndSwimming()
+    {
+        isSwimming = false;
     }
 }

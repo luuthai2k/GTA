@@ -20,7 +20,7 @@ public class PlayerShootLaser : MonoBehaviour
         StartCoroutine(CouroutineCanShoot());
         FreeLookCameraControl.ins.TargetHeading(true, 0.5f, 0.5f);
         speedcam = FreeLookCameraControl.ins._touchSpeedSensitivity;
-        FreeLookCameraControl.ins._touchSpeedSensitivity = 0.02f;
+        FreeLookCameraControl.ins._touchSpeedSensitivity = 0.01f;
         FreeLookCameraControl.ins.cameraWhenShootLaser.SetCamWhenShootLaser();
         Player.ins.animator.SetBool("IsLaser", true);
     }

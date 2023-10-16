@@ -52,7 +52,8 @@ public class AIAttack : MonoBehaviour
             transform.LookAt(aiController.enemy.transform);
             if (currenWeapon == SelectWeapon.Knife)
             {
-                aiController.animator.SetInteger("Knife Type", Random.Range(0, 3));
+                aiController.animator.SetInteger("Knife Type", Random.Range(0, 4));
+
             }
             if (currenWeapon == SelectWeapon.Pistol)
             {

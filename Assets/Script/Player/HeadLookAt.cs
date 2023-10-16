@@ -6,6 +6,7 @@ using UnityEngine.Animations.Rigging;
 public class HeadLookAt : MonoBehaviour
 {
 
+
     public MultiAimConstraint multiAimConstraint;
     public Transform player;
 
@@ -16,7 +17,7 @@ public class HeadLookAt : MonoBehaviour
         float dotProduct = Vector3.Dot(cameraForward.normalized, playerForward.normalized);
         if (dotProduct >= 0)
         {
-            multiAimConstraint.weight = dotProduct ;
+            multiAimConstraint.weight = dotProduct;
         }
         else
         {

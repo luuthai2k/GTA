@@ -15,15 +15,9 @@ public class FxPooling : MonoBehaviour
     private List<ParticleSystem> woodHitEffectPool = new List<ParticleSystem>();
     public ParticleSystem _bloodEffect;
     private List<ParticleSystem> bloodEffectPool = new List<ParticleSystem>();
-    public ParticleSystem _rocketHit;
-    private List<ParticleSystem> rocketHitPool = new List<ParticleSystem>();
     private void Start()
     {
         ins = this;
-    }
-    public ParticleSystem GetrocketHitPool(Vector3 pos)
-    {
-        return GetPool(pos, _rocketHit, rocketHitPool);
     }
     public ParticleSystem GetwoodHitEffectPool(Vector3 pos)
     {
@@ -55,13 +49,11 @@ public class FxPooling : MonoBehaviour
                 particle.gameObject.SetActive(true);              
                 particle.gameObject.transform.position = pos;
                 particle.gameObject.transform.rotation = Quaternion.identity;
-                ReturnPool(particle, 5f);
                 return particle;
             }
         }
         ParticleSystem newparticle = Instantiate(particleSystem, pos,Quaternion.identity);
-        Pool.Add(newparticle);
-        ReturnPool(newparticle, 5f);
+        muzzleFlashPool.Add(newparticle);
         return newparticle;
     }
 

@@ -49,16 +49,16 @@ AudioMixerEffectController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name:
+  m_Name: 
   m_EffectID: 2e304ac2d6aaa384c87b818832f13615
   m_EffectName: ParamEQ
-  m_MixLevel: 00000000000000000000000000000000
+  m_MixLevel: ece3800dac9d9f648aab1dc56ef3aa62
   m_Parameters:
-  - m_ParameterName: Param_0
+  - m_ParameterName: Center freq
     m_GUID: b6b5329510b87dc409bd967bddd8e8e8
-  - m_ParameterName: Param_1
+  - m_ParameterName: Octave range
     m_GUID: b31069360dce78941ad8779de988644c
-  - m_ParameterName: Param_2
+  - m_ParameterName: Frequency gain
     m_GUID: e5533b1467a3b2b47b5e5a1caca795a5
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
@@ -69,16 +69,16 @@ AudioMixerEffectController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name:
+  m_Name: 
   m_EffectID: 66f4a534ba03ddf4cae2a84a979b8ee2
   m_EffectName: ParamEQ
-  m_MixLevel: 00000000000000000000000000000000
+  m_MixLevel: fa8eccf0b2b108e48a524ce910a45180
   m_Parameters:
-  - m_ParameterName: Param_0
+  - m_ParameterName: Center freq
     m_GUID: 53cf762bc4594fd4d8a144578a94e689
-  - m_ParameterName: Param_1
+  - m_ParameterName: Octave range
     m_GUID: bfb9f11932fe9ac4480057fa375cd402
-  - m_ParameterName: Param_2
+  - m_ParameterName: Frequency gain
     m_GUID: b096cc725135d9a4e8360a6961e8be7e
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
@@ -89,10 +89,10 @@ AudioMixerEffectController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name:
+  m_Name: 
   m_EffectID: 413237832c5e6f64b8e0f87406c097e0
   m_EffectName: Attenuation
-  m_MixLevel: 00000000000000000000000000000000
+  m_MixLevel: c8c62287386fb50448ee6a6291bd6b9c
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
@@ -107,12 +107,12 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: d0bf1c812711d524a9c4cc07db539da5
   m_FloatValues:
-  - 98dd5f3e93155454f933a50aa294e883: 0
-  - 2c5dee5113229cd4bac6df77c83501d9: 1
-  - b6b5329510b87dc409bd967bddd8e8e8: 7126
-  - b31069360dce78941ad8779de988644c: 1.059
-  - e5533b1467a3b2b47b5e5a1caca795a5: 1.763
-  - 53cf762bc4594fd4d8a144578a94e689: 176
-  - bfb9f11932fe9ac4480057fa375cd402: 1.375
-  - b096cc725135d9a4e8360a6961e8be7e: 1.614
+    2c5dee5113229cd4bac6df77c83501d9: 1
+    b096cc725135d9a4e8360a6961e8be7e: 1.614
+    e5533b1467a3b2b47b5e5a1caca795a5: 1.763
+    b6b5329510b87dc409bd967bddd8e8e8: 7126
+    b31069360dce78941ad8779de988644c: 1.059
+    bfb9f11932fe9ac4480057fa375cd402: 1.375
+    53cf762bc4594fd4d8a144578a94e689: 176
+    98dd5f3e93155454f933a50aa294e883: 0
   m_TransitionOverrides: {}

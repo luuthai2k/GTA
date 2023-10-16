@@ -62,6 +62,11 @@ public class NPCAttack : MonoBehaviour
             }
         }
     }
+
+    public void CheckDame()
+    {
+        meleeWeapon.OnController();
+    }
     public bool CheckObstacle()
     {
         ray.origin =transform.position+Vector3.up;
@@ -129,11 +134,10 @@ public class NPCAttack : MonoBehaviour
         while (isAttack)
         {
             float distance = Vector3.Distance(npcControl.enemy.transform.position, transform.position);
-            Debug.Log(distance);
+        
             npcControl.pointtarget = npcControl.enemy.transform;
             if (rangedWeapon != SelectWeapon.Unarmed )
             {
-
                 if (distance > 15)
                 {
                     if (isRanged )

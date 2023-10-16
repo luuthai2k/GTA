@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponData: {fileID: 11400000, guid: 9f6023ac0a1bde84c8adb07695eba8be, type: 2}
   muzzle: {fileID: 4772576569818529}
+  spawnBullet: {fileID: 0}
   fireRate: 0
   startTime: 0
 --- !u!1 &1310481986405680

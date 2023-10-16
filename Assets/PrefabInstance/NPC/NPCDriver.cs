@@ -24,7 +24,7 @@ public class NPCDriver : MonoBehaviour
     public float steeringAngle;
     public VehicleSensor sensor;
     private float timedelay;
-    
+
 
     public void DriverVehicle()
     {
@@ -37,7 +37,7 @@ public class NPCDriver : MonoBehaviour
         else if (npcControl.chacractorData.vehicle == SelectVehicles.Motor)
         {
             GetInMotor();
-           
+
         }
         //else
         //{
@@ -50,12 +50,12 @@ public class NPCDriver : MonoBehaviour
     {
         if (Vehiclel == null)
         {
-    
+
             Vehiclel = Instantiate(npcControl.chacractorData.vehiclePrefab, transform.position, transform.rotation);
             //Vehiclel.transform.LookAt(npcControl.pointtarget);
             car = Vehiclel.GetComponent<Car>();
             sensor = car.sensor;
-           
+
         }
         else
         {
@@ -68,7 +68,7 @@ public class NPCDriver : MonoBehaviour
         transform.position = car.enterFormPos[0].position;
         transform.eulerAngles = car.transform.eulerAngles + new Vector3(0f, 90f, 0f);
         npcControl.animator.Play("GetCarLeft");
-       
+
     }
     public void GetInMotor()
     {
@@ -86,7 +86,7 @@ public class NPCDriver : MonoBehaviour
         transform.position = motor.enterFormPos[0].position;
         transform.eulerAngles = motor.transform.eulerAngles + new Vector3(0f, 90f, 0f);
         npcControl.animator.Play("GetCarLeft");
-      
+
     }
     public void Driver()
     {
@@ -99,7 +99,7 @@ public class NPCDriver : MonoBehaviour
         while (candriver)
         {
             DriverManager();
-            findThePath.PathProgress(npcControl.pointtarget,Vehiclel.transform);
+            findThePath.PathProgress(npcControl.pointtarget, Vehiclel.transform);
             if (npcControl.chacractorData.vehicle == SelectVehicles.Car)
             {
                 DriverCar();
@@ -108,18 +108,18 @@ public class NPCDriver : MonoBehaviour
             {
                 DriverMotor();
             }
-            if (Vector3.Distance(transform.position, Player.ins.transform.position) >= NPCManager.ins.maxdistance)
-            {
+            //if (Vector3.Distance(transform.position, Player.ins.transform.position) >= NPCManager.ins.maxdistance)
+            //{
 
-                NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.5f);
-                candriver = false;
-                yield break;
-            }
+            //    NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.5f);
+            //    candriver = false;
+            //    yield break;
+            //}
             if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
             {
                 NextPoint();
             }
-           
+
             yield return null;
         }
     }
@@ -132,15 +132,15 @@ public class NPCDriver : MonoBehaviour
             if (runaway)
             {
                 currentspeed = npcControl.chacractorData.maxspeed;
-                
-                    timedelay += Time.deltaTime;
-                    if (timedelay > 2 && !ischangedirection)
-                    {
-                       
-                        timedelay = 0;
-                        StartCoroutine(ChangeDirection());
-                    }
-               
+
+                timedelay += Time.deltaTime;
+                if (timedelay > 2 && !ischangedirection)
+                {
+
+                    timedelay = 0;
+                    StartCoroutine(ChangeDirection());
+                }
+
 
             }
             else
@@ -176,7 +176,7 @@ public class NPCDriver : MonoBehaviour
 
     }
 
-   public void DriverCar()
+    public void DriverCar()
     {
         car.MoveVehicle(forward, currentspeed);
         car.UpdateVehicleSteering();
@@ -186,13 +186,13 @@ public class NPCDriver : MonoBehaviour
     {
         motor.VerticalMove(forward, currentspeed);
         motor.HorizontalMove(steeringAngle * npcControl.chacractorData.speedRotate * forward);
-        motor.TiltingToMotorcycle(0, steeringAngle *0.5f* forward);
-      
+        motor.TiltingToMotorcycle(0, steeringAngle * 0.5f * forward);
+
     }
     public void NextPoint()
     {
         Debug.Log("nextpoint");
-      
+
         if (npcControl.pointtarget.gameObject.GetComponent<PointAIMove>() != null)
         {
             npcControl.pointtarget = npcControl.pointtarget.gameObject.GetComponent<PointAIMove>()._nextpoint;
@@ -219,9 +219,9 @@ public class NPCDriver : MonoBehaviour
 
         candriver = false;
         StartCoroutine(StopVehicles());
-       
+
     }
-   IEnumerator StopVehicles()
+    IEnumerator StopVehicles()
     {
         while (pursue)
         {
@@ -245,7 +245,19 @@ public class NPCDriver : MonoBehaviour
         }
         transform.parent = null;
         npcControl.animator.SetTrigger("GetOutVehicle");
+       
+
+        //Invoke("EndDeadVehicle", 4f);
+    }
+
+    public void EndDeadVehicle()
+    {       
+       
+        npcControl.animator.SetBool("DeadOutVehicle", false);
+
         npcControl.npcState.ChangeState(SelectState.Attack);
     }
+
+
 }
 

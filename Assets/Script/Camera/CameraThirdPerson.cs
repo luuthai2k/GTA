@@ -5,23 +5,31 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
 
-public class CameraThirdPerson : FreeLookCameraControl
+public class CameraThirdPerson : MonoBehaviour
 {
-    public float topheightbase;
-    public float midheightbase;
-    public float botheightbase;
-    public float topradbase;
-    public float midradbase;
-    public float botradbase;
+    public CinemachineFreeLook freeLookCamera;  
+    public CinemachinePOV aimPOV;
+    public Joystick joystick;
     private void Start()
     {
-        topheightbase = freeLookCam.m_Orbits[2].m_Height;
-        midheightbase = freeLookCam.m_Orbits[1].m_Height;
-        botheightbase = freeLookCam.m_Orbits[0].m_Height;
-        topradbase = freeLookCam.m_Orbits[2].m_Radius;
-        midradbase = freeLookCam.m_Orbits[1].m_Radius;
-        botradbase = freeLookCam.m_Orbits[0].m_Radius;
+        //freeLookCamera.m_Heading.m_Bias = -20f;
     }
-   
+    private void Update()
+    {
+        
+        //if (Input.GetMouseButton(0))
+        //{
+        //    CamSetUp(-20);
+        //    return;
+        //}
+        //else
+        //{
+        //    CamSetUp(0);
+        //}
+    }
+    public void CamSetUp(float targetBias )
+    {
+        DOTween.To(() => freeLookCamera.m_Heading.m_Bias, x => freeLookCamera.m_Heading.m_Bias = x, targetBias, 0.5f);
+    }
 
 }

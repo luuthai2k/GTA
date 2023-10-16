@@ -25,7 +25,12 @@ public class NPCMovement : MonoBehaviour
     {
         forward = _forward;
         npcControl.animator.SetFloat("Forward", forward);
-        StartCoroutine(MoveCourotine());
+        npcControl.animator.Play("Grounded");
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(MoveCourotine());
+        }
+        
     }
     public void Idle()
     {
@@ -55,7 +60,7 @@ public class NPCMovement : MonoBehaviour
             npcControl.navMeshAgent.enabled = true;
            
             npcControl.animator.applyRootMotion = false;
-            Debug.Log("kjj");
+         
              bool isGrounded= npcControl.animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded") ;
             if (isGrounded)
             {
@@ -97,9 +102,6 @@ public class NPCMovement : MonoBehaviour
         ismove = false;
         npcControl.animator.SetFloat("Forward", 0);
         npcControl.navMeshAgent.speed = 0;
-
-
-
     }
 
 
@@ -113,7 +115,7 @@ public class NPCMovement : MonoBehaviour
         if (npcControl.pointtarget.gameObject.GetComponent<PointAIMove>() != null)
         {
             int i = Random.Range(0, 101);
-            Debug.Log(i);
+    
             if (i >= 0 && i <= rate)
             {
                 npcControl.pointtarget = npcControl.pointtarget.gameObject.GetComponent<PointAIMove>().RandomNextPoint();
@@ -121,14 +123,9 @@ public class NPCMovement : MonoBehaviour
             }
             else
             {
-
                 npcControl.npcState.ChangeState(SelectState.Idle);
-
-
             }
         }
     }
-
-   
-
+ 
 }
