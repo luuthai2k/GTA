@@ -18,10 +18,6 @@ public class PlayerShootLaser : MonoBehaviour
         if (isStart) return;
         isStart = true;
         StartCoroutine(CouroutineCanShoot());
-        FreeLookCameraControl.ins.TargetHeading(true, 0.5f, 0.5f);
-        speedcam = FreeLookCameraControl.ins._touchSpeedSensitivity;
-        FreeLookCameraControl.ins._touchSpeedSensitivity = 0.01f;
-        FreeLookCameraControl.ins.cameraWhenShootLaser.SetCamWhenShootLaser();
         Player.ins.animator.SetBool("IsLaser", true);
     }
 
@@ -32,11 +28,10 @@ public class PlayerShootLaser : MonoBehaviour
     }
     public void ShootLaser()
     {
+        Quaternion rot = Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f));
+        Player.ins.transform.rotation = Quaternion.RotateTowards(Player.ins.transform.rotation, rot, 100 * Time.deltaTime);
         StartShootLaser();
         if (!canshoot) return;
-        FreeLookCameraControl.ins.TargetHeading(false);
-        Player.ins.playerControl.playerRigControl.ShootLaser();
-        Player.ins.transform.rotation = Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f));
         if (laser == null)
         {
             laser = BulletPooling.ins.GetLaserPool(muzzleTransform.position);
@@ -51,10 +46,8 @@ public class PlayerShootLaser : MonoBehaviour
     }
     public void FinishShootLaser()
     {
-        Player.ins.playerControl.playerRigControl.ReturnShootLaser();
+      
         Player.ins.playerControl.characterControl.isLaser = false;
-        FreeLookCameraControl.ins.cameraWhenShootLaser.ReturnCamBase();
-        FreeLookCameraControl.ins._touchSpeedSensitivity = speedcam;
         if (laser != null)
         {
             laser.SetActive(false);

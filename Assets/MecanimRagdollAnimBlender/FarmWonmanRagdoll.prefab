@@ -114,6 +114,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1586009671069153494}
   - component: {fileID: 1586009671069153495}
+  - component: {fileID: 8113127783858986168}
   m_Layer: 0
   m_Name: FarmWonmanRagdoll
   m_TagString: Untagged
@@ -150,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   KNOCKOUT_RECOVER_RATE: 0.1
+  currState_: 0
   m_animGO: {fileID: 1586009672900677332}
   m_physicsGO: {fileID: 1586009672427256365}
   m_currOffBalance: 0
@@ -163,7 +165,24 @@ MonoBehaviour:
   m_getupBackAnimFlag: GetUpBack
   m_getupStomachAnimFlag: GetUpStomach
   m_GOSpeedMod: 15
+  isDie: 0
   blendAmount: 1
+--- !u!114 &8113127783858986168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586009671069153493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb520614b5fb7440aafc8475d740f97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 0}
+  bodyPhysics: {fileID: 1586009671069153495}
+  rb: {fileID: 8422713930345643694}
+  timeRagdoll: 0
 --- !u!1 &1586009672427218445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2165,7 +2184,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7114846120351115598}
-  - component: {fileID: 7156138710535873104}
   m_Layer: 15
   m_Name: head
   m_TagString: Untagged
@@ -2188,19 +2206,6 @@ Transform:
   m_Father: {fileID: 7114685299477412153}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -18.12917, y: -0.000027882721, z: -0.000004166363}
---- !u!135 &7156138710535873104
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7109353570141970444}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15
-  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &7109365093593534464
 GameObject:
   m_ObjectHideFlags: 0

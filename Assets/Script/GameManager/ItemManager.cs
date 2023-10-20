@@ -19,7 +19,7 @@ public class ItemManager : MonoBehaviour
     }
     public void Start()
     {
-        Init();
+        //Init();
     }
     private void Init()
     {

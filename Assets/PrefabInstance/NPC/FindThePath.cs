@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using static Unity.VisualScripting.Member;
-using static UnityEditor.PlayerSettings;
-
 public class FindThePath : MonoBehaviour
 {
     
@@ -66,12 +63,7 @@ public class FindThePath : MonoBehaviour
                 PostionToFollow = waypoints[currentWayPoint];
                 if (Vector3.Distance(_transform.position, PostionToFollow) < 2)
                     currentWayPoint++;
-                if (Vector3.Distance(waypoints[waypoints.Count-1], pointtarget.position) > 10)
-                {
-                    //currentWayPoint = 0;
-                    //waypoints.Clear();
-                }
-
+               
                 
             }
 

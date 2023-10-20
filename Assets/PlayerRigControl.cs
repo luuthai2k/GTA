@@ -29,12 +29,12 @@ public class PlayerRigControl : MonoBehaviour
             rigBuilder.layers[0].active = false;
       
     }
-    public void ShootLaser()
-    {
-        multiAimConstraint_Spine.weight = 1;
-    }
-    public void ReturnShootLaser()
-    {
-        multiAimConstraint_Spine.weight = 0;
-    }
+    //public void ShootLaser()
+    //{
+    //    multiAimConstraint_Spine.weight = 1;
+    //}
+    //public void ReturnShootLaser()
+    //{
+    //    multiAimConstraint_Spine.weight = 0;
+    //}
 }

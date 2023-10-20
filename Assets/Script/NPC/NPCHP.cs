@@ -16,15 +16,15 @@ public class NPCHP : MonoBehaviour
 
     public bool isdead;
 
-    public int bonus,wanterPoint;
+    public int bonus, wanterPoint;
 
     [SerializeField]
-    private GameObject ragdollNPC,ragdollNPCNow;
+    private GameObject ragdollNPC, ragdollNPCNow;
 
     [SerializeField]
     private Rigidbody rb;
 
-    public void HitDame(int dame, Vector3 pos, float powerRagdoll = 0,bool isRagdoll = false)
+    public void HitDame(int dame, Vector3 pos, float powerRagdoll = 0, bool isRagdoll = false)
     {
         if (hp >= 0)
         {
@@ -33,16 +33,16 @@ public class NPCHP : MonoBehaviour
                 npcState.ChangeState(SelectState.Attack);
             }
             hp -= dame;
-            
+
         }
-        else if(isdead == false)
+        else if (isdead == false)
         {
             npcControl.animator.enabled = false;
 
             PoliceStarManager.ins.ChangeWanterPoint(wanterPoint);
             UpgradeXpManager.ins.CheckLevel(Random.Range(150, 250));
 
-            OnRagdoll(Vector3.zero, powerRagdoll);
+            OnRagdoll(Vector3.zero, powerRagdoll, true);
             Invoke("NPCDead", 2.5f);
             isdead = true;
         }
@@ -68,33 +68,23 @@ public class NPCHP : MonoBehaviour
         Vector3 pos = new Vector3(x, transform.position.y, z);
 
         NPCManager.ins.npcPooling.SpawnPickUp(pos);
-        NPCManager.ins.npcPooling.SpawnPickUp(pos,true);
+        NPCManager.ins.npcPooling.SpawnPickUp(pos, true);
     }
 
 
-    public void OnRagdoll(Vector3 pos, float power = 0)
+    public void OnRagdoll(Vector3 pos, float power = 0, bool isDie = false)
     {
         NPC.SetActive(false);
 
-        ragdollNPCNow = Instantiate(ragdollNPC, transform.position, transform.rotation);
-        gameObject.GetComponent<CharacterController>().enabled = false;
+        ragdollNPCNow = Instantiate(ragdollNPC, transform.parent.position, transform.parent.rotation);
 
-        ragdollNPCNow.GetComponent<BodyPhysicsController>().Fall();
+        //if (gameObject.GetComponent<CharacterController>() != null)
+        //{
+        //    gameObject.GetComponent<CharacterController>().enabled = false;
+        //}
 
-        ragdollNPCNow.GetComponent<Rigidbody>().AddForce(pos * power);
-
-        Invoke("EndRagdoll", 1.25f);
+        ragdollNPCNow.GetComponent<RagDoll>().OnRagDoll(transform.parent.gameObject, pos * power,isDie);
     }
 
-
-    public void EndRagdoll()
-    {
-        transform.position = new Vector3(ragdollNPCNow.transform.position.x, transform.position.y, ragdollNPCNow.transform.position.z);
-
-        NPC.SetActive(true);
-
-        gameObject.GetComponent<CharacterController>().enabled = true;
-        Destroy(ragdollNPCNow);
-    }
 
 }

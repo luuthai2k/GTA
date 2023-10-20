@@ -252,10 +252,7 @@ public class NPCDriver : MonoBehaviour
 
     public void EndDeadVehicle()
     {       
-       
-        npcControl.animator.SetBool("DeadOutVehicle", false);
-
-        npcControl.npcState.ChangeState(SelectState.Attack);
+        npcControl.DoFallAction();
     }
 
 

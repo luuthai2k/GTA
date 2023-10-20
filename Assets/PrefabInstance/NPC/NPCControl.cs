@@ -66,7 +66,7 @@ public class NPCControl : MonoBehaviour
 
     public void DoFallAction()
     {
-        // Implement falling behavior
+        npcHp.OnRagdoll(Vector3.zero);
     }
 
     public void DoAttackAction()

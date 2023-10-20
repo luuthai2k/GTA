@@ -4,35 +4,14 @@ using UnityEngine;
 
 public class RocketShoot : MonoBehaviour
 {
-    public Rigidbody rigibody;
-    public ParticleSystem FX;
     public float dame;
-    public GameObject bullet;
-    
-    
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
-   
-    private void OnCollisionEnter(Collision collision)
-    {
-      
-        if (collision.gameObject.tag != "Helicopter")
+        if (!other.CompareTag("Player"))
         {
-            FX.Play();
-            //gameObject.SetActive(false);
-            rigibody.isKinematic = true;
-            Invoke("EndEffect", 1f);
+            ParticleSystem hit = FxPooling.ins.GetrocketHitPool(transform.position);
+            gameObject.SetActive(false);
         }
 
-       
     }
-
-    private void EndEffect()
-    {
-        gameObject.SetActive(false);
-    }
-   
 }

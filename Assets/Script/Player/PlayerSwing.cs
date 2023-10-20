@@ -51,7 +51,8 @@ public class PlayerSwing : MonoBehaviour
             if (transform.position.y > heightMax) return;
             Player.ins.animator.SetBool("IsSwing", true);
             if (startSwing) return;
-            FreeLookCameraControl.ins.TargetHeading(true, 1, 1f);
+            //FreeLookCameraControl.ins.TargetHeading(true, 1, 1f);
+           
             swing = 0;
             isfall = false;
             if (myTween != null)
@@ -102,8 +103,8 @@ public class PlayerSwing : MonoBehaviour
         joint.damper = 5;
         joint.massScale = 10;
         joint.spring = 7.5f;
-        myTween = DOTween.To(() => currentdamping, x => currentdamping = x, 2, damping)
-        .SetEase(Ease.InQuad);
+        myTween =DOTween.To(() => currentdamping, x => currentdamping = x, 2, damping)
+        .SetEase(Ease.InQuad); 
         lineRenderer.enabled = true;
         isjump = false;
 
@@ -115,32 +116,30 @@ public class PlayerSwing : MonoBehaviour
         float currenspeed = 0;
         if (isSwing)
         {
+            //FreeLookCameraControl.ins.TargetHeading(true, 2, 2f);
             Player.ins.animator.applyRootMotion = false;
             IsSwing();
             Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
             Vector3 directionMove = Vector3.zero;
             Player.ins.animator.SetFloat("Forward", Mathf.Clamp01(direction.magnitude));
             Player.ins.animator.SetFloat("Turn", characterControl.joystick.Horizontal);
-            float targetAngle = Mathf.Clamp(Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg, -60, 60) + Camera.main.transform.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
-            if (direction.magnitude != 0)
-            {
-                transform.rotation = Quaternion.Euler(0, angle, 0);
-                FreeLookCameraControl.ins.TargetHeading(true, 1, 1f);
-            }
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg+ Camera.main.transform.eulerAngles.y;
+            float angle = 0;
 
             if (isfall)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
                 fall += Time.deltaTime * 0.1f;
                 directionMove = transform.up * currenforce + transform.forward * currenfoward + new Vector3(0.0f, _verticalVelocity, 0.0f);
+                 angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, 2f);
 
             }
             else
             {
+
                 swing += Time.deltaTime;
-                currenforce = force * Mathf.Clamp(swing, 0.5f, 2f);
-                currenfoward = foward * Mathf.Clamp(direction.magnitude * swing, Mathf.Clamp(swing, 0.5f, 1.5f), 1.5f);
+                currenforce = force * Mathf.Clamp(swing, 0.5f,1f);
+                currenfoward = foward * Mathf.Clamp(direction.magnitude * swing, Mathf.Clamp(swing, 0.5f, 1f), 1.25f);
                 if (CheckForAngle(swingStartPoint.position, swingPoint))
                 {
                     startSwing = false;
@@ -150,9 +149,13 @@ public class PlayerSwing : MonoBehaviour
                 }
 
                 _verticalVelocity = 0;
-                directionMove = transform.forward * foward * Mathf.Clamp(fall, 1f, fall) + transform.up * force * currentdamping;
+                directionMove = transform.forward * foward * Mathf.Clamp(fall, 1f, 1.5f) + transform.up * force * currentdamping;
+                angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
 
             }
+            Player.ins.animator.SetFloat("Fall", _verticalVelocity);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+               
             Player.ins.characterController.Move(directionMove * Time.deltaTime);
             return;
         }

@@ -8,7 +8,7 @@ public class HealthPickup : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<PlayerHP>().PlusHp(40);
+            other.gameObject.GetComponent<PlayerHP>().PlusHp(200);
 
             gameObject.SetActive(false);
         }

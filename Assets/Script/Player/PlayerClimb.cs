@@ -62,32 +62,38 @@ public class PlayerClimb : MonoBehaviour
             isStart = false;
             Player.ins.animator.SetFloat("Vertical", v);
             Player.ins.animator.SetFloat("Horizontal", h);
-            if (h + v != 0)
-            {
-                FreeLookCameraControl.ins.TargetHeading(true, 1, 0.5f);
-            }
             if (characterControl.isSwing && !Player.ins.playerControl.isSwing)
             {
 
-                transform.rotation = Quaternion.LookRotation(-rot);
+                transform.rotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(-rot).eulerAngles.y, 0));
                 Player.ins.animator.SetBool("NearWall", false);
+                Player.ins.animator.SetBool("IsJump", true);
 
                 return;
             }
-            if (isPlane)
+            if (h + v != 0)
             {
-                Player.ins.characterController.Move(climbDirection * speed * Time.deltaTime);
+                FreeLookCameraControl.ins.TargetHeading(true, 1);
+                if (isPlane)
+                {
+                    Player.ins.characterController.Move(climbDirection * speed * Time.deltaTime);
 
-            }
-            if (isCorner)
-            {
-                MoveToTarget();
+                }
+                if (isCorner)
+                {
+                    MoveToTarget();
+                }
+                else
+                {
+                    cancheck = true;
+                }
             }
             else
             {
-                cancheck = true;
+                FreeLookCameraControl.ins.TargetHeading(false);
             }
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(rot), speedrotate * Time.deltaTime);
+           
+            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(-rot).eulerAngles.y, 0)), speedrotate * Time.deltaTime);
             transform.rotation = newRotation;
 
         }
@@ -99,7 +105,7 @@ public class PlayerClimb : MonoBehaviour
             }
             else
             {
-                transform.rotation = Quaternion.LookRotation(-rot);
+                //transform.rotation = Quaternion.LookRotation(-rot);
                 JumpUptoGround(transform.forward, 5);
             }
 
@@ -147,6 +153,7 @@ public class PlayerClimb : MonoBehaviour
             directionJump = new Vector3(h, 0f, v);
             float targetAngle = Mathf.Atan2(directionJump.normalized.x, directionJump.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
             directionJump = new Vector3(0, targetAngle, 0);
+            transform.rotation = Quaternion.Euler(directionJump);
             isGround = true;
             isPlane = false;
             isCorner = false;
@@ -185,8 +192,9 @@ public class PlayerClimb : MonoBehaviour
     {
         StartJump();
         _verticalVelocity += Gravity * Time.deltaTime;
-        Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(direction), speedrotate * Time.deltaTime);
-        transform.rotation = newRotation;
+        Player.ins.animator.SetFloat("Fall", _verticalVelocity);
+        //Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(direction), 10 * Time.deltaTime);
+        //transform.rotation = newRotation;
         Player.ins.characterController.Move((transform.forward * _speed + new Vector3(0, _verticalVelocity, 0)) * Time.deltaTime);
 
     }
@@ -195,6 +203,7 @@ public class PlayerClimb : MonoBehaviour
 
         if (isStart) return;
         isStart = true;
+        FreeLookCameraControl.ins.TargetHeading(true);
         _verticalVelocity = Mathf.Sqrt(Mathf.Abs(jumpHeight * Gravity));
 
 

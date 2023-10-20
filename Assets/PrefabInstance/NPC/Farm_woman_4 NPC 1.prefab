@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavMeshLayers:
-  - Road
+  - Walkable
   waypoints: []
   PostionToFollow: {x: 0, y: 0, z: 0}
   ShowGizmos: 1

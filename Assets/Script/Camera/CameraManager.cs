@@ -5,10 +5,11 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager ins;
-    public GameObject camThirdPeson;
+    public GameObject camGround;
     public GameObject camThirdPesonMotorandCar;
     public GameObject camThirdPesonTank;
     public GameObject camThirdPesonHelicopter;
+    public GameObject camAir;
     void Awake()
     {
         ins = this;
@@ -18,15 +19,21 @@ public class CameraManager : MonoBehaviour
     {
         if (index == 0)
         {
-            camThirdPeson.SetActive(true);
+            camGround.SetActive(true);
             camThirdPesonMotorandCar.SetActive(false);
             camThirdPesonTank.SetActive(false);
             camThirdPesonHelicopter.SetActive(false);
+            camAir.SetActive(false);
 
         }
         else if (index == 1)
         {
-            camThirdPesonMotorandCar.SetActive(true);          
+            camThirdPesonMotorandCar.SetActive(true);     
+             camGround.SetActive(true);
+            camThirdPesonMotorandCar.SetActive(false);
+            camThirdPesonTank.SetActive(false);
+            camThirdPesonHelicopter.SetActive(false);
+            camAir.SetActive(false);
             camThirdPesonMotorandCar.GetComponent<CameraThirdPersonVehicles>().TargetCam(target);
         }
         else if (index == 2)
@@ -35,6 +42,11 @@ public class CameraManager : MonoBehaviour
             camThirdPesonTank.GetComponent<CameraThirdPersonVehicles>().TargetCam(target);
         }
         else if (index == 3)
+        {
+            camThirdPesonHelicopter.SetActive(true);
+            camThirdPesonHelicopter.GetComponent<CameraThirdPersonVehicles>().TargetCam(target);
+        }
+        else if (index == 4)
         {
             camThirdPesonHelicopter.SetActive(true);
             camThirdPesonHelicopter.GetComponent<CameraThirdPersonVehicles>().TargetCam(target);

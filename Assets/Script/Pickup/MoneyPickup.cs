@@ -9,7 +9,7 @@ public class MoneyPickup : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            ItemManager.ins.AddMoney(100);
+            //ItemManager.ins.AddMoney(100);
 
             gameObject.SetActive(false);
         }

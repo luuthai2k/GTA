@@ -8,21 +8,23 @@ public class ShootingTank : MonoBehaviour
     public List<GameObject> bulletPool = new List<GameObject>();
     public Transform barrelOut;
     public float speed;
-  
+
     Ray ray;
     void Start()
     {
-        
+
     }
     private void Update()
     {
-        
+
         ray.origin = barrelOut.transform.position;
         ray.direction = barrelOut.transform.forward;
 
+        Debug.DrawRay(ray.origin, ray.direction * 200f, Color.green);
+
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f))
         {
-           
+
 
         }
     }
@@ -36,7 +38,7 @@ public class ShootingTank : MonoBehaviour
     {
         foreach (GameObject bullet in bulletPool)
         {
-            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().bullet;
+            GameObject prefabbullet = bullet.GetComponent<RocketShoot>().gameObject;
             if (!prefabbullet.activeInHierarchy)
             {
                 prefabbullet.SetActive(true);
@@ -51,6 +53,6 @@ public class ShootingTank : MonoBehaviour
 
     public void ReturnBullet(GameObject bag, float time)
     {
-        
+
     }
 }

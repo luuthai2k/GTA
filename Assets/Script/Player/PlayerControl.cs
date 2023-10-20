@@ -69,7 +69,7 @@ public class PlayerControl : MonoBehaviour
                 playerSwing.Swing(characterControl);
                 break;
             case PlayerState.Rope:
-                //npcControl.DoFallAction();
+                playerRope.Rope(characterControl);
                 break;
             case PlayerState.Attack:
                 playerAttack.Attack(characterControl.isAttack);
@@ -98,6 +98,7 @@ public class PlayerControl : MonoBehaviour
 
         if (characterControl.isRope || Input.GetKey(KeyCode.R))
         {
+            
             ChangeState(PlayerState.Rope);
             return;
         }
@@ -125,7 +126,7 @@ public class PlayerControl : MonoBehaviour
             isSwing = true;
             return;
         }
-        else if (characterControl.isSwimming || Input.GetKey(KeyCode.W))
+        else if (characterControl.isSwimming )
         {
             playerState = PlayerState.Swimming;
         }
@@ -170,6 +171,36 @@ public class PlayerControl : MonoBehaviour
     public void ChangeState(PlayerState _playerState)
     {
         if (playerState == _playerState) return;
+        FinishState();
+         if (_playerState == PlayerState.Laser)
+        {
+            //FreeLookCameraControl.ins.TargetHeading(true);
+        }
+        else if (_playerState == PlayerState.Swing)
+        {
+            FreeLookCameraControl.ins.TargetHeading(true, 2);
+        }
+        else if (_playerState == PlayerState.Climb)
+        {
+            Player.ins.animator.SetBool("NearWall", true);
+        }
+        else if (_playerState == PlayerState.Rocket)
+        {
+            //if (playerShootRoket.isShoot) return;
+        }
+        else if (_playerState == PlayerState.Move)
+        {
+            FreeLookCameraControl.ins.TargetHeading(false);
+        }
+        else if (_playerState == PlayerState.Rope)
+        {
+            playerRope.PrepareShoot();
+        }
+
+        playerState = _playerState;
+    }
+    public void FinishState()
+    {
         if (playerState == PlayerState.Attack)
         {
             playerAttack.FinishActack(0f);
@@ -177,26 +208,28 @@ public class PlayerControl : MonoBehaviour
         else if (playerState == PlayerState.Laser)
         {
             playerShootLaser.FinishShootLaser();
+           
         }
         else if (playerState == PlayerState.Swing)
         {
             playerSwing.FinishSwing(0);
+            playerSwing.fall = 1;
             Player.ins.animator.SetBool("IsSwing", false);
         }
         else if (playerState == PlayerState.Climb)
         {
-            Player.ins.animator.SetBool("NearWall", false);
+            return;
+
         }
         else if (playerState == PlayerState.Rocket)
         {
             if (playerShootRoket.isShoot) return;
         }
-        //if (playerState == PlayerState.Swing)
-        //{
-        //    playerSwing.ChangeToFall();
-        //    return;
-        //}
-        playerState = _playerState;
+        else if (playerState == PlayerState.Rope)
+        {
+           playerRope.FinishRope();
+        }
+
     }
 }
 public enum PlayerState

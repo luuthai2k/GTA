@@ -37,8 +37,12 @@ public class PointCenterSceenToWorld : MonoBehaviour
             {
                 targetTransform.localPosition = new Vector3(0,0,200);
             }
-            ControlsManager.ins.Control[0].GetComponent<CharacterControl>().rope.SetActive(true);
             CollisionObj = raycastHit.collider.gameObject;
+           
+                ControlsManager.ins.Control[0].GetComponent<CharacterControl>().rope.SetActive(true);
+               
+           
+           
         }
         else
         {

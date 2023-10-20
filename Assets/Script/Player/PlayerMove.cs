@@ -9,19 +9,19 @@ public class PlayerMove : MonoBehaviour
     [Header("Player Movement")]
     public PlayerControl playerControl;
     public float speed;
-    public float currenspeed;
     public float foward;
     public Quaternion rot;
     float turnCalmVelocity;
     [SerializeField] float turnCalmTime = 1f;
-    public float speedrotatesprint;
     private float angle;
     public float Gravity;
     private float _verticalVelocity;
-
+    float curentfoward = 0;
     private bool infiniteStamina;
+    public float damping;
 
-    [SerializeField]
+    Vector3 direction;
+   [SerializeField]
     private PlayerHP playerHP;
 
     public void OffRagdoll()
@@ -33,37 +33,39 @@ public class PlayerMove : MonoBehaviour
     }
     public void HandleInput(CharacterControl characterControl)
     {
-        Vector3 direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
-
-        float targetAngle = Mathf.Atan2(direction.normalized.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-        angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
+         direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
+        float targetrotate = Mathf.Atan2(direction.normalized.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+        float CosAngle = Vector3.Dot(Quaternion.Euler(0, targetrotate, 0) * Vector3.forward, transform.forward);
+        float Angle = Mathf.Acos(CosAngle) * Mathf.Rad2Deg;
         Player.ins.animator.SetBool("IsSwing", false);
         if (characterControl.isSprint && playerHP.stamina > 0)
         {
-            currenspeed = speed * 2.5f;
-            foward = 1.5f;
-            //rot = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)), speedrotatesprint);
-            rot = transform.rotation;
+            curentfoward = 1.5f * (180 - Angle) / 180 ;
+            angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, ref turnCalmVelocity, turnCalmTime);
             if (!infiniteStamina)
             {
                 playerHP.ChangeStamina(0.25f);
             }
 
-            return;
+           
+        }
+        else
+        {
+            angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetrotate, ref turnCalmVelocity, turnCalmTime);
+            curentfoward = direction.magnitude * (180 - Angle) / 180;
         }
         rot = Quaternion.Euler(0, angle, 0);
-        float CosAngle = Vector3.Dot(Quaternion.Euler(0, targetAngle, 0) * Vector3.forward, transform.forward);
-        float Angle = Mathf.Acos(CosAngle) * Mathf.Rad2Deg;
-        foward = direction.magnitude * (180 - Angle) / 180;
-        
+        foward = Mathf.MoveTowards(foward, curentfoward, damping * Time.deltaTime);
+
 
     }
     public void Move(CharacterControl characterControl)
     {
-
         HandleInput(characterControl);
         if (playerControl.onSurface)
         {
+            _verticalVelocity = 0;
+            Player.ins.animator.SetFloat("Fall", _verticalVelocity);
             if (!Player.ins.animator.applyRootMotion)
             {
                 Player.ins.animator.applyRootMotion = true;
@@ -73,16 +75,17 @@ public class PlayerMove : MonoBehaviour
             if (characterControl.joystick.Vertical != 0 || characterControl.joystick.Horizontal != 0 || characterControl.isSprint)
             {
                 transform.rotation = rot;
-                FreeLookCameraControl.ins.TargetHeading(false, 1, 1f);
+                FreeLookCameraControl.ins.TargetHeading(false);
             }
         }
         else
         {
             _verticalVelocity += Gravity * Time.deltaTime;
-            Player.ins.characterController.Move((transform.forward * speed * 0.5f + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
-            transform.rotation = rot;
+            Player.ins.animator.SetFloat("Fall", _verticalVelocity);
+            Player.ins.characterController.Move((transform.forward * speed * direction.magnitude + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation,rot,50*Time.deltaTime);
         }
-
+       
 
     }
 

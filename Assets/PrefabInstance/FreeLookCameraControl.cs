@@ -17,7 +17,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     private Vector2 touchCurrentPosition;
     private Vector2 _lookInput;
     public float _touchSpeedSensitivity;
-    private float _speedRotate;
+    [SerializeField] private float _speedRotate;
     [SerializeField] private SettingManager settingManager;
     private string _touchXMapTo = "Mouse X";
     private string _touchYMapTo = "Mouse Y";
@@ -25,6 +25,8 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     public int touchID;
     public float _smoothingFactor = 2;
     public bool isTargetHeading;
+    public float damping;
+    public Slider slider;
 
     void Start()
     {
@@ -64,7 +66,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
     {
         OutputVectorValue(Vector2.zero);
         _isPlayerTouchingPanel = false;
-
+        _speedRotate = 0;
     }
 
     public void OnPointerDown(PointerEventData _onPointerDownData)
@@ -72,7 +74,6 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         OnDrag(_onPointerDownData);
         _isPlayerTouchingPanel = true;
         touchCurrentPosition = _onPointerDownData.position;
-        TargetHeading(false, 1, 1);
     }
     private void Update()
     {
@@ -81,7 +82,7 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         {
 
             Vector2 newtouchPosition = Input.GetTouch(touchID).position;
-            _speedRotate = Vector2.Distance(newtouchPosition, touchCurrentPosition) * _touchSpeedSensitivity;
+            _speedRotate = Mathf.MoveTowards(_speedRotate, Vector2.Distance(newtouchPosition, touchCurrentPosition) * _touchSpeedSensitivity, slider.value * Time.deltaTime);
             touchCurrentPosition = newtouchPosition;
             if (Input.GetTouch(touchID).phase == TouchPhase.Moved) return;
             OutputVectorValue(Vector2.zero);
@@ -119,15 +120,17 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         Vector2 rawInput = new Vector2(_onDragData.delta.normalized.x, _onDragData.delta.normalized.y);
         OutputVectorValue(Vector2.Lerp(_playerTouchVectorOutput, rawInput, _smoothingFactor));
     }
-    public void TargetHeading(bool enabled, float waitTime = 1, float recenteringTime = 1)
+    public void TargetHeading(bool enabled, float timeDelay = 0)
     {
-        freeLookCam.m_RecenterToTargetHeading.m_enabled = enabled;
-        freeLookCam.m_YAxisRecentering.m_enabled = enabled;
+        if (isTargetHeading == enabled) return;
         isTargetHeading = enabled;
-        freeLookCam.m_RecenterToTargetHeading.m_WaitTime = Mathf.Clamp(waitTime, 0.5f, waitTime);
-        freeLookCam.m_RecenterToTargetHeading.m_RecenteringTime = Mathf.Clamp(recenteringTime, 0.5f, recenteringTime);
-        freeLookCam.m_YAxisRecentering.m_WaitTime = Mathf.Clamp(waitTime, 0.5f, waitTime);
-        freeLookCam.m_YAxisRecentering.m_RecenteringTime = Mathf.Clamp(recenteringTime, 0.5f, recenteringTime);
+        StartCoroutine(DelayTargetHeading(timeDelay));
+    }
+    IEnumerator DelayTargetHeading( float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+        freeLookCam.m_RecenterToTargetHeading.m_enabled = isTargetHeading ;
+        freeLookCam.m_YAxisRecentering.m_enabled = isTargetHeading ;
     }
 
 }

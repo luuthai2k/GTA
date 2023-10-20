@@ -9,6 +9,7 @@ public class HeadLookAt : MonoBehaviour
 
     public MultiAimConstraint multiAimConstraint;
     public Transform player;
+    public float damping;
 
     public void HeadLookAtToCenter()
     {
@@ -17,11 +18,12 @@ public class HeadLookAt : MonoBehaviour
         float dotProduct = Vector3.Dot(cameraForward.normalized, playerForward.normalized);
         if (dotProduct >= 0)
         {
-            multiAimConstraint.weight = dotProduct;
+            multiAimConstraint.weight = Mathf.MoveTowards(multiAimConstraint.weight, 0.5f + dotProduct, damping * Time.deltaTime);
         }
         else
         {
-            multiAimConstraint.weight = 0;
+           
+            multiAimConstraint.weight = Mathf.MoveTowards(multiAimConstraint.weight, 1+ dotProduct,damping*Time.deltaTime);
         }
 
 
