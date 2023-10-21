@@ -20,7 +20,7 @@ MonoBehaviour:
   vehicle: 1
   vehiclePrefab: {fileID: 5652737001127456653, guid: 571e9993740ed9a4daeb013586fa8af8, type: 3}
   speed: 5
-  maxspeed: 10
-  speedRotate: 2
+  maxspeed: 15
+  speedRotate: 3
   dame: 20
   rangeDame: 30

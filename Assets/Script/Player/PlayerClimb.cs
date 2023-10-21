@@ -51,17 +51,24 @@ public class PlayerClimb : MonoBehaviour
     public void Climb(CharacterControl characterControl)
     {
         StartClimb();
+
         float h = characterControl.joystick.Horizontal;
         float v = characterControl.joystick.Vertical;
         canclimb = CanClimb(h, v);
         Player.ins.animator.SetBool("NearWall", canclimb);
+       Vector3 direction = Vector3.right * h + Vector3.up * v;
+        float targetRotate = Mathf.Clamp(Vector3.SignedAngle(direction, Vector3.up, Vector3.forward),-90,90);
+        float CosAngle = Vector3.Dot(Quaternion.Euler(0, 0, targetRotate) * Vector3.up, transform.up);
+        float Angle = Mathf.Acos(CosAngle) * Mathf.Rad2Deg;
 
+        //rot = Quaternion.Euler(0, angle, 0);
+        //    foward = Mathf.MoveTowards(foward, curentfoward, damping* Time.deltaTime);
+        Debug.Log(Angle);
         if (canclimb)
         {
-
+            Player.ins.animator.SetFloat("Forward", direction.magnitude);
             isStart = false;
-            Player.ins.animator.SetFloat("Vertical", v);
-            Player.ins.animator.SetFloat("Horizontal", h);
+           
             if (characterControl.isSwing && !Player.ins.playerControl.isSwing)
             {
 
@@ -73,10 +80,12 @@ public class PlayerClimb : MonoBehaviour
             }
             if (h + v != 0)
             {
+              
+                Player.ins.animator.SetFloat("Horizontal", targetRotate / 90);
                 FreeLookCameraControl.ins.TargetHeading(true, 1);
                 if (isPlane)
                 {
-                    Player.ins.characterController.Move(climbDirection * speed * Time.deltaTime);
+                    Player.ins.characterController.Move(transform.up * speed * Time.deltaTime);
 
                 }
                 if (isCorner)
@@ -93,8 +102,8 @@ public class PlayerClimb : MonoBehaviour
                 FreeLookCameraControl.ins.TargetHeading(false);
             }
 
-            Quaternion newRotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(rot).eulerAngles.y, 0));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, speedrotate * Time.deltaTime);
+            Quaternion newRotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(rot).eulerAngles.y, -targetRotate));
+            transform.rotation = newRotation;
 
         }
         else
