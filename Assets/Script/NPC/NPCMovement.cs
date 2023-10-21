@@ -84,13 +84,13 @@ public class NPCMovement : MonoBehaviour
                 npcControl.animator.SetFloat("Forward", 0);
                 npcControl.navMeshAgent.speed = 0;
             }
-            if (Vector3.Distance(transform.position, Player.ins.transform.position) >= NPCManager.ins.maxdistance)
-            {
+            //if (Vector3.Distance(transform.position, Player.ins.transform.position) >= NPCManager.ins.maxdistance)
+            //{
 
-                NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.5f);
-                canmove = false;
-                yield break;
-            }
+            //    NPCManager.ins.npcPooling.ReturnPool(gameObject, 0.5f);
+            //    canmove = false;
+            //    yield break;
+            //}
             npcControl.navMeshAgent.SetDestination(npcControl.pointtarget.position);
             if (Vector3.Distance(transform.position, npcControl.pointtarget.position) < 5f)
             {

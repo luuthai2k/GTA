@@ -1301,7 +1301,8 @@ MonoBehaviour:
   isRanged: 0
   meleeWeaponPrefab: {fileID: 0}
   rangedWeaponPrefab: {fileID: 0}
-  addWeapon: {fileID: 7350174928863693192}
+  addWeapon: {fileID: 7350174930106319337}
+  addGunWeapon: {fileID: 7350174930106319337}
   isfinish: 0
   offset: 0.1
 --- !u!114 &1715713701842772487
@@ -1355,7 +1356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavMeshLayers:
-  - Walkable
+  - Road
   waypoints: []
   PostionToFollow: {x: 0, y: 0, z: 0}
   ShowGizmos: 1
@@ -2806,7 +2807,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1720144057862935370}
-  - component: {fileID: 4068834936454451180}
   m_Layer: 0
   m_Name: head
   m_TagString: Untagged
@@ -2829,19 +2829,6 @@ Transform:
   m_Father: {fileID: 1719917266561663805}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -18.12917, y: -0.000027882721, z: -0.000004166363}
---- !u!135 &4068834936454451180
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714552414155364872}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15
-  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &1714560963721255188
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,7 +3459,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7350174928199566097}
-  - component: {fileID: 9205894551310139430}
   m_Layer: 0
   m_Name: MeleeDamageTrigger
   m_TagString: Untagged
@@ -3494,19 +3480,6 @@ Transform:
   m_Father: {fileID: 7350174928453470817}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!135 &9205894551310139430
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7350174928199566094}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7350174928230233029
 GameObject:
   m_ObjectHideFlags: 0

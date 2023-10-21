@@ -8,12 +8,12 @@ using UnityEngine;
 public class PlayerHP : MonoBehaviour
 {
     [SerializeField]
-    private int hp, firstHp;
+    private float hp, firstHp;
 
     public float stamina, firstStamina;
 
     [SerializeField]
-    private int armor, maxArmor;
+    private float armor, maxArmor;
 
     [SerializeField]
     private PlayerControl playerControl;
@@ -38,17 +38,10 @@ public class PlayerHP : MonoBehaviour
     [SerializeField]
     private ParticleSystem effectblood;
 
-    private float timeWanter;
-
-    private float timeStamina;
-
-    private float timeHp;
 
     [SerializeField]
     private CharacterParameter characterParameter;
 
-    [SerializeField]
-    private List<int> timeLoseWanter;
 
     [SerializeField]
     private Rigidbody rb;
@@ -58,34 +51,37 @@ public class PlayerHP : MonoBehaviour
     {
         firstPosition = transform.position;
         effectblood.Stop();
-        CheckStarWanter();
-        CheckStamina();
-        CheckHp();
+
+        RechargeStamina();
+        ChangeHp();
+        hp = UpgradeXpManager.ins.dataGame.maxHp;
         firstHp = hp;
+        stamina = UpgradeXpManager.ins.dataGame.maxStamina;
         firstStamina = stamina;
         armor = 0;
-        maxArmor = 100;
+        maxArmor = firstHp / 2;
         characterParameter.Armor(maxArmor, armor);
     }
 
 
-    public void OnHit(HitDameState dameState, bool isRagdoll, int dame, Vector3 pos,float powerRagdoll = 0)
+    public void OnHit(HitDameState dameState, bool isRagdoll, float dame, Vector3 pos, float powerRagdoll = 0)
     {
         if (isDead == false)
         {
             if (dameState == HitDameState.Car)
             {
                 hp -= dame;
-                //OnRagdoll(Vector3.zero,powerRagdoll);
+               
             }
             else if (dameState == HitDameState.Water)
             {
-                if (stamina >= 0)
+                if (stamina > 0)
                 {
-                    ChangeStamina(dame);
+                    LoseStamina(dame);
                 }
                 else
                 {
+                    
                     hp -= dame;
                 }
             }
@@ -93,12 +89,12 @@ public class PlayerHP : MonoBehaviour
             {
                 effectblood.Play();
                 if (armor <= 0)
-                {             
+                {
                     hp -= dame;
                 }
                 else
-                {  
-                    ChangeArmor(dame);
+                {
+                    LoseArmor(dame);
                 }
             }
 
@@ -109,27 +105,13 @@ public class PlayerHP : MonoBehaviour
             }
             if (isRagdoll)
             {
-                OnRagdoll(Vector3.zero,powerRagdoll);
+                OnRagdoll(Vector3.zero, powerRagdoll);
             }
 
             characterParameter.HeatIndex(firstHp, hp);
-            timeWanter = Time.time;
+
         }
 
-    }
-    public void CheckStarWanter()
-    {
-        if(PoliceStarManager.ins.IndexWanter() != 0)
-        {
-            float indexWanter = timeLoseWanter[PoliceStarManager.ins.IndexWanter()];
-
-            if (timeWanter + indexWanter <= Time.time)
-            {
-                PoliceStarManager.ins.LoseWanterPoint();
-                timeWanter = Time.time;
-            }
-        }
-        Invoke("CheckStarWanter", 0.5f);
     }
 
 
@@ -165,7 +147,7 @@ public class PlayerHP : MonoBehaviour
         transform.parent = null;
         Player.ins.ChangeControl(0);
         Player.ins.animator.Play("Grounded");
-        CameraManager.ins.ChangeCam(0,Player.ins.transform);
+        CameraManager.ins.ChangeCam(0, Player.ins.transform);
         Invoke("EndDead", 1.25f);
     }
 
@@ -182,10 +164,10 @@ public class PlayerHP : MonoBehaviour
         gameObject.GetComponent<CharacterController>().enabled = true;
         NPCPooling.ins.CheckPlayerDead();
         Destroy(ragdollNow);
-     
+
     }
 
-    public void ChangeStamina(float _stamina)
+    public void LoseStamina(float _stamina)
     {
         stamina -= _stamina;
         if (stamina <= 0)
@@ -194,6 +176,20 @@ public class PlayerHP : MonoBehaviour
         }
         characterParameter.StaminaIndex(firstStamina, stamina);
 
+    }
+
+    public void RechargeStamina()
+    {
+        if (playerControl.playerState == PlayerState.Swimming)
+        {
+
+        }
+        else
+        {
+            PlusStamina(UpgradeXpManager.ins.dataGame.maxStaminaRecharge);
+        }
+
+        Invoke("RechargeStamina", 1f);
     }
 
     public void PlusStamina(float _stamina, bool maxStamina = false)
@@ -218,43 +214,32 @@ public class PlayerHP : MonoBehaviour
             }
             characterParameter.StaminaIndex(firstStamina, stamina);
         }
-       
+
     }
 
 
-    public void ChangeArmor(int _armor)
+    public void LoseArmor(float _armor)
     {
         armor -= _armor;
 
-        if(armor <= 0)
+        if (armor <= 0)
         {
             armor = 0;
         }
-        else if(armor >= maxArmor)
+        else if (armor >= maxArmor)
         {
-            armor = maxArmor;   
+            armor = maxArmor;
         }
 
         characterParameter.Armor(maxArmor, armor);
     }
-
-    public void CheckStamina()
+    public void PlusArmor(int _armor)
     {
-        if (playerControl.playerState == PlayerState.Swimming)
-        {
+        armor = maxArmor;
 
-        }
-        else
-        {
-            if (timeStamina + 2 < Time.time)
-            {
-                timeStamina = Time.time;
-                PlusStamina(firstStamina/200);
-            }
-        }
-
-        Invoke("CheckStamina", 1f);
+        characterParameter.Armor(maxArmor, armor);
     }
+
 
     public void PlusHp(int _hp)
     {
@@ -267,23 +252,19 @@ public class PlayerHP : MonoBehaviour
         characterParameter.HeatIndex(firstHp, hp);
     }
 
-    public void CheckHp()
+    public void ChangeHp()
     {
-        if (timeHp + 2 < Time.time)
+        if (playerControl.playerState == PlayerState.Swimming)
         {
-            timeHp = Time.time;
-            PlusHp(5);
+
         }
-        Invoke("CheckHp", 1f);
+        else
+        {
+            PlusHp(10);
+        }
+
+        Invoke("ChangeHp", 1f);
     }
-
-    public void PlusArmor(int _armor)
-    {
-        armor = maxArmor;
-
-        characterParameter.Armor(maxArmor, armor);
-    }
-
 
 }
 

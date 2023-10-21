@@ -37,7 +37,12 @@ public class PlayerSensor : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Water"))
         {      
             characterControl.Swimming();
+
             Player.ins.animator.SetBool("OnGround", false);
+            Player.ins.animator.Play("Swimming");
+            //Player.ins.transform.position = new Vector3(Player.ins.transform.position.x,)
+
+            Invoke("DameWater", 0.5f);
 
         }
 
@@ -62,4 +67,15 @@ public class PlayerSensor : MonoBehaviour
             playerControl.ChangeState(PlayerState.Move);
         }
     }
+
+    public void DameWater()
+    {
+        Player.ins.playerHP.OnHit(HitDameState.Water, false, 0.25f, Vector3.zero);
+        if (Player.ins.playerControl.playerState == PlayerState.Swimming)
+        {       
+            Invoke("DameWater", Time.deltaTime);
+        }
+        
+    }
 }
+

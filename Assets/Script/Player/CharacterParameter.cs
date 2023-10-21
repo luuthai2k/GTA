@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class CharacterParameter : MonoBehaviour
 {
     [SerializeField]
-    private Slider heat, stamina, xp, armor;
+    private Slider heat, stamina, armor;
 
     [SerializeField]
     private Text lv;
 
-    public void HeatIndex(int _maxheat, int _heat)
+    public void HeatIndex(float _maxheat, float _heat)
     {
         heat.maxValue = _maxheat;
         heat.value = _heat;
@@ -22,20 +22,11 @@ public class CharacterParameter : MonoBehaviour
         stamina.value = _stamina;   
     }    
 
-    public void Armor(int _maxarmor,int _armor)
+    public void Armor(float _maxarmor, float _armor)
     {
         armor.maxValue = _maxarmor;
         armor.value = _armor;
     }
 
-    public void XpIndex(int _maxXp,int _xp)
-    {
-        xp.maxValue = _maxXp;
-        xp.value = _xp;
-    }
 
-    public void LvIndex(int _lv)
-    {
-        lv.text = "Lv " + _lv;
-    }
 }

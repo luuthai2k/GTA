@@ -17,6 +17,8 @@ public class ChacractorData : ScriptableObject
     public float speed;
     public float maxspeed;
     public float speedRotate;
+    public float dame;
+    public float rangeDame;
 
 }
 public enum SelectRole

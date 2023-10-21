@@ -19,6 +19,8 @@ MonoBehaviour:
   rangedWeapon: {fileID: 1179571918604148, guid: d2a2937dff12ca74c8a4a69c56e17837, type: 3}
   vehicle: 1
   vehiclePrefab: {fileID: 5652737001127456653, guid: 571e9993740ed9a4daeb013586fa8af8, type: 3}
-  speed: 7
+  speed: 5
   maxspeed: 10
-  speedRotate: 3
+  speedRotate: 2
+  dame: 20
+  rangeDame: 30

@@ -45,6 +45,9 @@ public class QuestManager : MonoBehaviour
     [SerializeField]
     private Text textTimeQuest;
 
+    [SerializeField]
+    private ItemManager itemManager; 
+
     public void Awake()
     {
         ins = this;
@@ -325,7 +328,8 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest()
     {
-        PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money") + dataQuest.reward);
+        //PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money") + dataQuest.reward);
+        itemManager.AddMoney(dataQuest.reward);
         indexQuest = 0;
         isQuest = false;
         dataQuest = null;

@@ -15,7 +15,7 @@ MonoBehaviour:
   _weapon: 5
   _name: 
   _dame: 100
-  _fireRate: 1
+  _fireRate: 30
   _startTime: 0
   _clipSize: 6
   _power: 10000

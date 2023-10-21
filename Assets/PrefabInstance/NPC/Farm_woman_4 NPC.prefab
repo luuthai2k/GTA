@@ -1329,6 +1329,9 @@ MonoBehaviour:
   isdead: 0
   bonus: 10
   wanterPoint: 20
+  ragdollNPC: {fileID: 0}
+  ragdollNPCNow: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!54 &8372877426235550549
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1494,18 +1497,6 @@ MonoBehaviour:
   npcDriver: {fileID: 5161803271222108598}
   timedelay: 0
   npcHp: {fileID: 5161803271145218122}
-  ragdollCollier:
-  - {fileID: 1714505851829299392}
-  - {fileID: 1714636431196442283}
-  - {fileID: 1714552414155364869}
-  - {fileID: 1714931135179247489}
-  - {fileID: 1714896158538377302}
-  - {fileID: 1713949626443863705}
-  - {fileID: 1714561349612185260}
-  - {fileID: 1714472982977564269}
-  - {fileID: 1714435525879294645}
-  - {fileID: 1713905522228634642}
-  - {fileID: 1714171295484683202}
 --- !u!195 &1715713701842772539
 NavMeshAgent:
   m_ObjectHideFlags: 0

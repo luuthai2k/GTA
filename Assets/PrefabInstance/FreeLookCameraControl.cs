@@ -126,11 +126,11 @@ public class FreeLookCameraControl : MonoBehaviour, IPointerDownHandler, IPointe
         isTargetHeading = enabled;
         StartCoroutine(DelayTargetHeading(timeDelay));
     }
-    IEnumerator DelayTargetHeading( float timeDelay)
+    IEnumerator DelayTargetHeading(float timeDelay)
     {
         yield return new WaitForSeconds(timeDelay);
-        freeLookCam.m_RecenterToTargetHeading.m_enabled = isTargetHeading ;
-        freeLookCam.m_YAxisRecentering.m_enabled = isTargetHeading ;
+        freeLookCam.m_RecenterToTargetHeading.m_enabled = isTargetHeading;
+        freeLookCam.m_YAxisRecentering.m_enabled = isTargetHeading;
     }
 
 }

@@ -107,10 +107,14 @@ public class CharacterControl : MonoBehaviour
     public void Swimming()
     {
         isSwimming = true;   
+
+
     }
 
     public void EndSwimming()
     {
         isSwimming = false;
     }
+
+   
 }

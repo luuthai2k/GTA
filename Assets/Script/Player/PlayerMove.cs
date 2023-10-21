@@ -9,42 +9,46 @@ public class PlayerMove : MonoBehaviour
     [Header("Player Movement")]
     public PlayerControl playerControl;
     public float speed;
+    public float currenspeed;
     public float foward;
+    float curentfoward = 0;
     public Quaternion rot;
     float turnCalmVelocity;
     [SerializeField] float turnCalmTime = 1f;
+    public float speedrotatesprint;
     private float angle;
     public float Gravity;
     private float _verticalVelocity;
-    float curentfoward = 0;
+
     private bool infiniteStamina;
+
+    [SerializeField]
+    private PlayerHP playerHP;
     public float damping;
 
     Vector3 direction;
-   [SerializeField]
-    private PlayerHP playerHP;
 
-    public void OffRagdoll()
-    {
+    //public void OffRagdoll()
+    //{
 
-        Player.ins.OffRagdoll();
+    //    Player.ins.OffRagdoll();
 
 
-    }
+    //}
     public void HandleInput(CharacterControl characterControl)
     {
-         direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
+        direction = new Vector3(characterControl.joystick.Horizontal, 0f, characterControl.joystick.Vertical);
         float targetrotate = Mathf.Atan2(direction.normalized.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
         float CosAngle = Vector3.Dot(Quaternion.Euler(0, targetrotate, 0) * Vector3.forward, transform.forward);
         float Angle = Mathf.Acos(CosAngle) * Mathf.Rad2Deg;
         Player.ins.animator.SetBool("IsSwing", false);
         if (characterControl.isSprint && playerHP.stamina > 0)
         {
-            curentfoward = 1.5f * (180 - Angle) / 180 ;
+            curentfoward = (1 * (1 + UpgradeXpManager.ins.dataGame.maxSprintSpeed)) * (180 - Angle) / 180;
             angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, ref turnCalmVelocity, turnCalmTime);
             if (!infiniteStamina)
             {
-                playerHP.ChangeStamina(0.25f);
+                playerHP.LoseStamina(0.25f);
             }
 
            
@@ -61,6 +65,7 @@ public class PlayerMove : MonoBehaviour
     }
     public void Move(CharacterControl characterControl)
     {
+
         HandleInput(characterControl);
         if (playerControl.onSurface)
         {
@@ -83,9 +88,9 @@ public class PlayerMove : MonoBehaviour
             _verticalVelocity += Gravity * Time.deltaTime;
             Player.ins.animator.SetFloat("Fall", _verticalVelocity);
             Player.ins.characterController.Move((transform.forward * speed * direction.magnitude + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation,rot,50*Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, 50 * Time.deltaTime);
         }
-       
+
 
     }
 

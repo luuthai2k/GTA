@@ -12,6 +12,9 @@ public class PlayerDriverCar : MonoBehaviour
 
     private Vector3 positionPos;
 
+    [SerializeField]
+    private Collider colliderPlayer;
+
     public void GetInCar(Transform _enterFormPos)
     {
   
@@ -19,7 +22,8 @@ public class PlayerDriverCar : MonoBehaviour
         car.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         CheckPositionInCar();
         positionPos = Player.ins.gameObject.transform.position;
-       
+
+        colliderPlayer.enabled = false;
     }
 
     public void CheckPositionInCar()
@@ -53,7 +57,7 @@ public class PlayerDriverCar : MonoBehaviour
             car.animOpenDoor.SetBool("Open", true);
             car.animOpenDoor.SetBool("Close", false);
             CameraManager.ins.ChangeCam(1, car.camtarget);
-            Player.ins.animator.SetBool("IsWalkInCar", false);
+           
 
               
         }
@@ -82,9 +86,11 @@ public class PlayerDriverCar : MonoBehaviour
     }
     public void GetOutCar()
     {
+        Player.ins.animator.SetBool("IsWalkInCar", false);
         car.animOpenDoor.SetBool("Open", true);
         car.animOpenDoor.SetBool("Close", false);
         Player.ins.animator.SetTrigger("GetOut");
+        colliderPlayer.enabled = true;
     }
     public void FinishGetOutCar()
     {

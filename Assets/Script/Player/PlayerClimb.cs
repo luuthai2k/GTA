@@ -67,7 +67,7 @@ public class PlayerClimb : MonoBehaviour
 
                 transform.rotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(-rot).eulerAngles.y, 0));
                 Player.ins.animator.SetBool("NearWall", false);
-                Player.ins.animator.SetBool("IsJump", true);
+                //Player.ins.animator.SetBool("IsJump", true);
 
                 return;
             }
@@ -92,9 +92,9 @@ public class PlayerClimb : MonoBehaviour
             {
                 FreeLookCameraControl.ins.TargetHeading(false);
             }
-           
-            Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(-rot).eulerAngles.y, 0)), speedrotate * Time.deltaTime);
-            transform.rotation = newRotation;
+
+            Quaternion newRotation = Quaternion.Euler(new Vector3(0, Quaternion.LookRotation(rot).eulerAngles.y, 0));
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, speedrotate * Time.deltaTime);
 
         }
         else
@@ -193,8 +193,6 @@ public class PlayerClimb : MonoBehaviour
         StartJump();
         _verticalVelocity += Gravity * Time.deltaTime;
         Player.ins.animator.SetFloat("Fall", _verticalVelocity);
-        //Quaternion newRotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(direction), 10 * Time.deltaTime);
-        //transform.rotation = newRotation;
         Player.ins.characterController.Move((transform.forward * _speed + new Vector3(0, _verticalVelocity, 0)) * Time.deltaTime);
 
     }

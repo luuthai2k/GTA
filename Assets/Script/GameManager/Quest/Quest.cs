@@ -6,6 +6,11 @@ public class Quest : MonoBehaviour
 {
     public List<Transform> checkPoint;
 
+    [SerializeField]
+    private Transform dataQuest;
+
+    [SerializeField]
+    private SpawnQuestStart spawnQuest;
 
     public void Start()
     {
@@ -17,5 +22,9 @@ public class Quest : MonoBehaviour
         {
             checkPoint[i].gameObject.SetActive(false);
         }
+
+        dataQuest.transform.position = spawnQuest.Pos().position;
+        dataQuest.transform.rotation = spawnQuest.Pos().rotation;
+
     }
 }

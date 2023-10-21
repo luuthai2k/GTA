@@ -5,41 +5,38 @@ using UnityEngine;
 public class CodetoolAuto : MonoBehaviour
 {
     [SerializeField]
-    private List<PhysicsBodyPart> physicsBodyParts;
-
-    [SerializeField]
-    private List<PhysicsBodyPart> physicsBodyPartsOne, physicsBodyPartsTwo;
+    private List<PhysicsBodyPart> physicsBodyParts1,physicsBodyParts2,physicsBodyParts;
 
     [ContextMenu("check")]
     public void Check()
     {
+        for (int i = 0; i < physicsBodyParts1.Count; i++)
+        {
+            physicsBodyParts1[i].m_blend = physicsBodyParts2[i].m_blend;
+            physicsBodyParts1[i].m_animBone = physicsBodyParts2[i].m_animBone;
+            physicsBodyParts1[i].m_animator = physicsBodyParts2[i].m_animator;
+            physicsBodyParts1[i].m_connectedParts = physicsBodyParts2[i].m_connectedParts;
+            physicsBodyParts1[i].m_controlRegain = physicsBodyParts2[i].m_controlRegain;
+            physicsBodyParts1[i].m_defaultControlRegain = physicsBodyParts2[i].m_defaultControlRegain;
+            physicsBodyParts1[i].m_connectedPartsWeight = physicsBodyParts2[i].m_connectedPartsWeight;
+            physicsBodyParts1[i].m_balanceRatio = physicsBodyParts2[i].m_balanceRatio;
+            physicsBodyParts1[i].m_blendMax = physicsBodyParts2[i].m_blendMax;
+            physicsBodyParts1[i].m_rigidness = physicsBodyParts2[i].m_rigidness;
+            physicsBodyParts1[i].m_blendSpeed = physicsBodyParts2[i].m_blendSpeed;
+            physicsBodyParts1[i].mBounceFactor = physicsBodyParts2[i].mBounceFactor;
+
+        }
+
         //for (int i = 0; i < physicsBodyParts.Count; i++)
         //{
-        //    if(physicsBodyParts[i].m_animator == null)
+        //    if (physicsBodyParts[i].m_animator != null)
         //    {
-        //        physicsBodyPartsOne.Add(physicsBodyParts[i]);
+        //        physicsBodyParts2.Add(physicsBodyParts[i]);
         //    }
         //    else
         //    {
-        //        physicsBodyPartsTwo.Add(physicsBodyParts[i]);
+        //        physicsBodyParts1.Add(physicsBodyParts[i]);
         //    }
         //}
-
-        for (int i = 0; i < physicsBodyPartsOne.Count; i++)
-        {
-            physicsBodyPartsOne[i].m_blend = physicsBodyPartsTwo[i].m_blend;
-            physicsBodyPartsOne[i].m_animBone = physicsBodyPartsTwo[i].m_animBone;
-            physicsBodyPartsOne[i].m_animator = physicsBodyPartsTwo[i].m_animator;
-            physicsBodyPartsOne[i].m_connectedParts = physicsBodyPartsTwo[i].m_connectedParts;
-            physicsBodyPartsOne[i].m_defaultControlRegain = physicsBodyPartsTwo[i].m_defaultControlRegain;
-            physicsBodyPartsOne[i].m_connectedPartsWeight = physicsBodyPartsTwo[i].m_connectedPartsWeight;
-            physicsBodyPartsOne[i].m_balanceRatio = physicsBodyPartsTwo[i].m_balanceRatio;
-            physicsBodyPartsOne[i].m_blendMax = physicsBodyPartsTwo[i].m_blendMax;
-            physicsBodyPartsOne[i].m_rigidness = physicsBodyPartsTwo[i].m_rigidness;
-            physicsBodyPartsOne[i].m_blendSpeed = physicsBodyPartsTwo[i].m_blendSpeed;
-            physicsBodyPartsOne[i].mBounceFactor = physicsBodyPartsTwo[i].mBounceFactor;
-
-
-        }
     }
 }

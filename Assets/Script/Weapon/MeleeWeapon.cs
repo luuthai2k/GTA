@@ -1,3 +1,4 @@
+//using Autodesk.Fbx;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,11 @@ public class MeleeWeapon : MonoBehaviour
 {
     public SelectWeapon meleeWeapons;
     public LayerMask HumanLayer;
-    private ParticleSystem hitEffect;
+    //private ParticleSystem hitEffect;
     [SerializeField]
     private Collider cod;
-
+    [SerializeField]
+    private NPCControl npc;
     [SerializeField]
     private int dame;
     private void Start()
@@ -18,10 +20,10 @@ public class MeleeWeapon : MonoBehaviour
 
     }
 
-    public void OnController()
+    public void OnController(NPCControl _npc)
     {
         cod.enabled = true;
-
+        npc = _npc;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -35,7 +37,7 @@ public class MeleeWeapon : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             
-            Player.ins.playerHP.OnHit(HitDameState.Weapon, false, dame,Vector3.zero);
+            Player.ins.playerHP.OnHit(HitDameState.Weapon, false, npc.chacractorData.dame,Vector3.zero);
             cod.enabled = false;
         }
     }

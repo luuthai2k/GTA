@@ -12,7 +12,7 @@ public class PlayerShootLaser : MonoBehaviour
     private GameObject laser;
     private float speedcam;
     public bool isStart;
-   
+
     public void StartShootLaser()
     {
         if (isStart) return;
@@ -46,7 +46,7 @@ public class PlayerShootLaser : MonoBehaviour
     }
     public void FinishShootLaser()
     {
-      
+
         Player.ins.playerControl.characterControl.isLaser = false;
         if (laser != null)
         {

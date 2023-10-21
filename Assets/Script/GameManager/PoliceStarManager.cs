@@ -20,7 +20,15 @@ public class PoliceStarManager : MonoBehaviour
     [SerializeField]
     private int wanterPoint;
 
+    [SerializeField]
+    private List<bool> isPoliceSpawns;
+
     public bool isQuest;
+
+    [SerializeField]
+    private List<int> timeLoseWanter;
+
+    private float timeWanter;
 
     public void Awake()
     {
@@ -31,35 +39,70 @@ public class PoliceStarManager : MonoBehaviour
         indexWanter = 0;
         wanterPoint = 0;
         ChangeStarWanter(0);
+        ReStartWanter();
     }
 
     public void ChangeWanterPoint(int _wanterPoint)
     {
+
+
         if (isQuest == false)
         {
+            timeWanter = Time.time;
             wanterPoint += _wanterPoint;
             if (wanterPoint <= 400)
             {
                 if (wanterPoint >= 10 && wanterPoint < 50)
                 {
-                    ChangeStarWanter(1);
+                   
+                    if (isPoliceSpawns[0] == false)
+                    {
+                  
+                        ChangeStarWanter(1);
+                        isPoliceSpawns[0] = true;
+                        
+                    }
+                    
                 }
                 else if (wanterPoint >= 50 && wanterPoint < 125)
                 {
-                    ChangeStarWanter(2);
+                    if (isPoliceSpawns[1] == false)
+                    {
+                   
+                        ChangeStarWanter(2);
+                        isPoliceSpawns[1] = true;
+                    }
+                    
                 }
                 else if (wanterPoint >= 125 && wanterPoint < 300)
                 {
-                    ChangeStarWanter(3);
+                    if (isPoliceSpawns[2] == false)
+                    {
+                       
+                        ChangeStarWanter(3);
+                        isPoliceSpawns[2] = true;
+                    }
+                    
                 }
                 else if (wanterPoint >= 300 && wanterPoint < 400)
                 {
-                    ChangeStarWanter(4);
+                    if (isPoliceSpawns[3] == false)
+                    {
+                        
+                        ChangeStarWanter(4);
+                        isPoliceSpawns[3] = true;
+                    }
+                    
                 }
                 else if (wanterPoint >= 400)
                 {
+                    if (isPoliceSpawns[4] == false)
+                    {
+                    
+                        ChangeStarWanter(5);
+                        isPoliceSpawns[4] = true;
+                    }
                     wanterPoint = 500;
-                    ChangeStarWanter(4);
                 }
             }
         }
@@ -105,10 +148,13 @@ public class PoliceStarManager : MonoBehaviour
         else if (indexWanter == 4)
         {
             npcPooling.SpawnStarNPC(1);
+            npcPooling.SpawnStarNPC(0);
+            npcPooling.SpawnStarNPC(0);
         }
         else if (indexWanter == 5)
         {
-            npcPooling.SpawnStarNPC(2);
+            npcPooling.SpawnStarNPC(1);
+            npcPooling.SpawnStarNPC(1);
         }
         else
         {
@@ -121,4 +167,20 @@ public class PoliceStarManager : MonoBehaviour
         indexWanter = 0;
         wanterPoint = 0;
     }
+
+
+    public void ReStartWanter()
+    {
+        if (IndexWanter() != 0)
+        {
+            float indexWanter = timeLoseWanter[IndexWanter()];
+            if (timeWanter + indexWanter <= Time.time)
+            {
+                LoseWanterPoint();
+                timeWanter = Time.time;
+            }
+        }
+        Invoke("ReStartWanter", 1f);
+    }
+
 }

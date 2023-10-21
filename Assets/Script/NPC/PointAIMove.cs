@@ -31,15 +31,15 @@ public class PointAIMove : MonoBehaviour
     {
         if (nextpoint.Count > 0)
         {
-            // Lấy một chỉ số ngẫu nhiên trong khoảng từ 0 đến độ dài danh sách - 1
+            
             int randomIndex = Random.Range(0, nextpoint.Count);
 
-            // Trả về Transform tại chỉ số ngẫu nhiên đã lấy
+          
             return nextpoint[randomIndex];
         }
         else
         {
-            // Nếu danh sách rỗng, trả về null hoặc thực hiện xử lý tùy ý
+           
             return null;
         }
     }

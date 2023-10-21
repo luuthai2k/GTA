@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HumanLayer:
     serializedVersion: 2
-    m_Bits: 262656
+    m_Bits: 263680
   MetalLayer:
     serializedVersion: 2
     m_Bits: 39360

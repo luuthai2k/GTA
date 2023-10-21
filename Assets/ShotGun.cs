@@ -12,13 +12,17 @@ public class ShotGun : MonoBehaviour
     public float startTime;
     public float offset;
     Ray ray;
+    [SerializeField]
+    private NPCControl npc;
+
     private void Start()
     {
 
         startTime = WeaponData._startTime;
     }
-    public void StartShooting()
+    public void StartShooting(NPCControl _npc)
     {
+        npc = _npc;
 
         if (startTime > 0)
         {
@@ -77,7 +81,9 @@ public class ShotGun : MonoBehaviour
             {
                 hitEffect = FxPooling.ins.GetbloodEffectPool(raycastHit.point);
                 hitEffect.gameObject.transform.LookAt(muzzle);
-                FxPooling.ins.ReturnPool(hitEffect, 5f);
+   
+                Player.ins.playerHP.OnHit(HitDameState.Weapon, false, npc.chacractorData.rangeDame, Vector3.zero);
+
                 return;
 
             }
@@ -86,7 +92,7 @@ public class ShotGun : MonoBehaviour
             {
                 hitEffect = FxPooling.ins.GetmetallHitEffectPool(raycastHit.point);
                 hitEffect.gameObject.transform.LookAt(muzzle);
-                FxPooling.ins.ReturnPool(hitEffect, 5f);
+                
                 return;
             }
 
@@ -94,7 +100,7 @@ public class ShotGun : MonoBehaviour
             {
                 hitEffect = FxPooling.ins.GetstoneHitEffectPool(raycastHit.point);
                 hitEffect.gameObject.transform.LookAt(muzzle);
-                FxPooling.ins.ReturnPool(hitEffect, 5f);
+                
                 return;
             }
 
@@ -102,7 +108,7 @@ public class ShotGun : MonoBehaviour
             {
                 hitEffect = FxPooling.ins.GetwoodHitEffectPool(raycastHit.point);
                 hitEffect.gameObject.transform.LookAt(muzzle);
-                FxPooling.ins.ReturnPool(hitEffect, 5f);
+                
                 return;
             }
 

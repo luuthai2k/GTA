@@ -13,6 +13,8 @@ public class RangedWeapon : MonoBehaviour
     public float fireRate = 0;
     public float startTime;
     Ray ray;
+    [SerializeField]
+    private NPCControl npc;
 
     private void Start()
     {
@@ -26,8 +28,10 @@ public class RangedWeapon : MonoBehaviour
         //        StartShooting();
         //    }
     }
-    public void StartShooting(Vector3 direction)
+
+    public void StartShooting(Vector3 direction,NPCControl _npc)
     {
+        npc = _npc;
 
         if (startTime > 0)
         {
@@ -81,6 +85,8 @@ public class RangedWeapon : MonoBehaviour
                 hitEffect = FxPooling.ins.GetbloodEffectPool(raycastHit.point);
                 hitEffect.gameObject.transform.LookAt(muzzle);
                 hitEffect.gameObject.transform.parent = raycastHit.collider.gameObject.transform;
+
+                Player.ins.playerHP.OnHit(HitDameState.Weapon, false, npc.chacractorData.rangeDame, Vector3.zero);
             }
 
 

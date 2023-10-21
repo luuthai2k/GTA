@@ -52,7 +52,7 @@ public class PlayerSwing : MonoBehaviour
             Player.ins.animator.SetBool("IsSwing", true);
             if (startSwing) return;
             //FreeLookCameraControl.ins.TargetHeading(true, 1, 1f);
-           
+
             swing = 0;
             isfall = false;
             if (myTween != null)
@@ -103,8 +103,8 @@ public class PlayerSwing : MonoBehaviour
         joint.damper = 5;
         joint.massScale = 10;
         joint.spring = 7.5f;
-        myTween =DOTween.To(() => currentdamping, x => currentdamping = x, 2, damping)
-        .SetEase(Ease.InQuad); 
+        myTween = DOTween.To(() => currentdamping, x => currentdamping = x, 2, damping)
+        .SetEase(Ease.InQuad);
         lineRenderer.enabled = true;
         isjump = false;
 
@@ -123,7 +123,7 @@ public class PlayerSwing : MonoBehaviour
             Vector3 directionMove = Vector3.zero;
             Player.ins.animator.SetFloat("Forward", Mathf.Clamp01(direction.magnitude));
             Player.ins.animator.SetFloat("Turn", characterControl.joystick.Horizontal);
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg+ Camera.main.transform.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
             float angle = 0;
 
             if (isfall)
@@ -131,14 +131,14 @@ public class PlayerSwing : MonoBehaviour
                 _verticalVelocity += Gravity * Time.deltaTime;
                 fall += Time.deltaTime * 0.1f;
                 directionMove = transform.up * currenforce + transform.forward * currenfoward + new Vector3(0.0f, _verticalVelocity, 0.0f);
-                 angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, 2f);
+                angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, 2f);
 
             }
             else
             {
 
                 swing += Time.deltaTime;
-                currenforce = force * Mathf.Clamp(swing, 0.5f,1f);
+                currenforce = force * Mathf.Clamp(swing, 0.5f, 1f);
                 currenfoward = foward * Mathf.Clamp(direction.magnitude * swing, Mathf.Clamp(swing, 0.5f, 1f), 1.25f);
                 if (CheckForAngle(swingStartPoint.position, swingPoint))
                 {
@@ -155,7 +155,7 @@ public class PlayerSwing : MonoBehaviour
             }
             Player.ins.animator.SetFloat("Fall", _verticalVelocity);
             transform.rotation = Quaternion.Euler(0, angle, 0);
-               
+
             Player.ins.characterController.Move(directionMove * Time.deltaTime);
             return;
         }

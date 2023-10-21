@@ -82,7 +82,7 @@ public class BodyPhysicsController : MonoBehaviour
 		}
 
 		//update the current balance based on the recovery rate;
-		m_currOffBalance = 1.0f - (m_balanceRecovery  *Time.deltaTime);
+		m_currOffBalance *= 1.0f - (m_balanceRecovery * Time.deltaTime);
 
 
 
@@ -96,7 +96,7 @@ public class BodyPhysicsController : MonoBehaviour
 					if (m_currOffBalance <= m_balance)
 					{
 						if (isDie == false)
-						{
+                        {
 							Recover();
 						}
 					}
@@ -199,7 +199,7 @@ public class BodyPhysicsController : MonoBehaviour
 	}
 
 
-	public void Fall(bool _isDie = false)
+	public void Fall( bool _isDie = false)
 	{
 		isDie = _isDie;
 		ToggleGravity(true);
@@ -217,7 +217,7 @@ public class BodyPhysicsController : MonoBehaviour
 
 	public void Recover()
 	{
-
+		
 		currState_ = State.RECOVERING;
 		ToggleGravity(false);
 		ChangeAllRecoveryRates(KNOCKOUT_RECOVER_RATE);

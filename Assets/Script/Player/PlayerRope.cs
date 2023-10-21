@@ -40,9 +40,9 @@ public class PlayerRope : MonoBehaviour
                 Pull();
                 timedelay = 0;
             }
-          
+
         }
-         if (isrush)
+        if (isrush)
         {
             Rush();
             return;
@@ -51,7 +51,7 @@ public class PlayerRope : MonoBehaviour
     }
     public void PrepareShoot()
     {
-      
+
         Player.ins.animator.Play("rope");
         collisionObj = PointCenterSceenToWorld.ins.CollisionObj;
         rb = collisionObj.GetComponent<Rigidbody>();
@@ -75,14 +75,14 @@ public class PlayerRope : MonoBehaviour
         currentThreadEnd = startPoint.position;
         lineRenderer.enabled = true;
         isshootsilk = true;
-       
+
         if (isrush)
         {
-            Player.ins.animator.SetBool("IsJump",true);
+            Player.ins.animator.SetBool("IsJump", true);
 
         }
     }
-   
+
     public void CheckCollision()
     {
         if (pullColliderMask == (pullColliderMask | (1 << collisionObj.layer)))
@@ -93,7 +93,7 @@ public class PlayerRope : MonoBehaviour
         }
         else
         {
-            Player.ins.animator.SetBool("IsRope",true);
+            Player.ins.animator.SetBool("IsRope", true);
             ispull = false;
             isrush = true;
         }
@@ -169,17 +169,18 @@ public class PlayerRope : MonoBehaviour
         characterControl.isRope = false;
         lineRenderer.enabled = false;
         Player.ins.animator.SetBool("IsJump", false);
+        Player.ins.animator.SetBool("IsRope", false);
     }
     public void RandomRopeType()
     {
         int value = Random.Range(1, 4);
         Player.ins.animator.SetInteger("RopeType", value);
     }
-   public void CollisionCheck(Vector3 direction)
+    public void CollisionCheck(Vector3 direction)
     {
         RaycastHit hit;
         Debug.DrawRay(startPoint.position, direction * 5f, Color.green);
-        if (Physics.Raycast(startPoint.position, direction, out hit, 5f))
+        if (Physics.Raycast(startPoint.position, direction, out hit, 2f))
         {
             FinishRope();
             Debug.Log("xxx");

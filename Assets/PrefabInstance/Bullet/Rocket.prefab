@@ -24585,8 +24585,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5adb50d66830584a8f5b07985ac6d59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dameExplosion: 0
-  powerRagDoll: 0
+  dameExplosion: 1000
+  powerRagDoll: 1
 --- !u!135 &471261239920334470
 SphereCollider:
   m_ObjectHideFlags: 0

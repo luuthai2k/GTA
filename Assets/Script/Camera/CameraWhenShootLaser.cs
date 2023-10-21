@@ -30,7 +30,6 @@ public class CameraWhenShootLaser : MonoBehaviour
     }
     public void SetCamWhenShootLaser()
     {
-       
         DOTween.To(() => freeLookCam.m_Orbits[2].m_Height, x => freeLookCam.m_Orbits[2].m_Height = x, botheight, 0.5f);
         DOTween.To(() => freeLookCam.m_Orbits[1].m_Height, x => freeLookCam.m_Orbits[1].m_Height = x, midheight, 0.5f);
         DOTween.To(() => freeLookCam.m_Orbits[0].m_Height, x => freeLookCam.m_Orbits[0].m_Height = x, topheight, 0.5f);

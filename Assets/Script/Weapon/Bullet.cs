@@ -11,12 +11,12 @@ public class Bullet : MonoBehaviour
         HumanLayer = GameManager.ins.layerData.HumanLayer;
       
     }
-    public void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "Player")
-        {        
-            Player.ins.playerHP.OnHit(HitDameState.Weapon, false, 10,Vector3.zero);
-        }
+    //public void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.gameObject.tag == "Player")
+    //    {        
+           
+    //    }
 
-    }
+    //}
 }

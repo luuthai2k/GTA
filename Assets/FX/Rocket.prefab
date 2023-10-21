@@ -14817,7 +14817,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigibody: {fileID: 8403656249372768435}
+  FX: {fileID: 0}
   dame: 0
+  bullet: {fileID: 0}
 --- !u!1 &7493796544337829417
 GameObject:
   m_ObjectHideFlags: 0

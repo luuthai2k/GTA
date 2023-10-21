@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using static UnityEditor.PlayerSettings;
+
 public class NPCPooling : MonoBehaviour
 {
     public static NPCPooling ins;
@@ -147,6 +149,12 @@ public class NPCPooling : MonoBehaviour
             if (indexNpcStar < maxPoolNpcStar)
             {
                 int indexSpawnPoint = Random.Range(0, transformSpawnPoint.Count);
+
+                if(Vector3.Distance(transformSpawnPoint[indexSpawnPoint].position,Player.ins.transform.position) > 50)
+                {
+                    SpawnStarNPC(index);
+                    return;
+                }
 
                 GameObject newnpc = Instantiate(NPCStar[0], transformSpawnPoint[indexSpawnPoint].position, Quaternion.identity);
                 NPCStarPool.Add(newnpc);

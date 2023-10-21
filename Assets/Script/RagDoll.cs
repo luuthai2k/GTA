@@ -19,9 +19,10 @@ public class RagDoll : MonoBehaviour
     {
         character = _character;
         rb.AddForce(pos);
-        bodyPhysics.Fall();
+        bodyPhysics.Fall(_isDie);
 
-        if (_isDie == false)
+
+        if(_isDie == false)
         {
             Invoke("EndRagdoll", 7f);
         }
@@ -29,12 +30,13 @@ public class RagDoll : MonoBehaviour
         {
             Invoke("DieNPC", 2f);
         }
-
+       
     }
 
 
     public void DieNPC()
     {
+    
         Destroy(gameObject);
     }
 
@@ -58,8 +60,5 @@ public class RagDoll : MonoBehaviour
         }
 
     }
-
-
-
 }
 

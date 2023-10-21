@@ -63,23 +63,23 @@ public class Player : MonoBehaviour
         }
         ControlsManager.ins.ChangeControl(i);
     }
-    public void OnRagdoll()
+    public void OnCollider()
     {
         //animator.enabled = false;
         //rb.isKinematic = false;
         //rb.AddForce(transform.forward, ForceMode.Impulse);
         //bone.SetActive(true);
 
+
+
     }
-    public void OffRagdoll()
+    public void OffCollider()
     {
         //animator.enabled = true;
         //rb.isKinematic = true;         
         //bone.SetActive(false);
 
     }
-
-
 
 }
 public enum SelectControl

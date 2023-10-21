@@ -98,7 +98,7 @@ public class PlayerControl : MonoBehaviour
 
         if (characterControl.isRope || Input.GetKey(KeyCode.R))
         {
-            
+
             ChangeState(PlayerState.Rope);
             return;
         }
@@ -126,7 +126,7 @@ public class PlayerControl : MonoBehaviour
             isSwing = true;
             return;
         }
-        else if (characterControl.isSwimming )
+        else if (characterControl.isSwimming)
         {
             playerState = PlayerState.Swimming;
         }
@@ -142,6 +142,8 @@ public class PlayerControl : MonoBehaviour
                     ChangeState(PlayerState.Climb);
                     return;
                 }
+                if (playerState == PlayerState.Swing) return;
+                ChangeState(PlayerState.Move);
             }
             else
             {
@@ -167,12 +169,12 @@ public class PlayerControl : MonoBehaviour
         }
 
     }
-   
+
     public void ChangeState(PlayerState _playerState)
     {
         if (playerState == _playerState) return;
         FinishState();
-         if (_playerState == PlayerState.Laser)
+        if (_playerState == PlayerState.Laser)
         {
             //FreeLookCameraControl.ins.TargetHeading(true);
         }
@@ -182,7 +184,7 @@ public class PlayerControl : MonoBehaviour
         }
         else if (_playerState == PlayerState.Climb)
         {
-            Player.ins.animator.SetBool("NearWall", true);
+            //Player.ins.animator.SetBool("NearWall", true);
         }
         else if (_playerState == PlayerState.Rocket)
         {
@@ -208,7 +210,7 @@ public class PlayerControl : MonoBehaviour
         else if (playerState == PlayerState.Laser)
         {
             playerShootLaser.FinishShootLaser();
-           
+
         }
         else if (playerState == PlayerState.Swing)
         {
@@ -218,6 +220,7 @@ public class PlayerControl : MonoBehaviour
         }
         else if (playerState == PlayerState.Climb)
         {
+            Player.ins.animator.SetBool("NearWall", false);
             return;
 
         }
@@ -227,7 +230,7 @@ public class PlayerControl : MonoBehaviour
         }
         else if (playerState == PlayerState.Rope)
         {
-           playerRope.FinishRope();
+            playerRope.FinishRope();
         }
 
     }

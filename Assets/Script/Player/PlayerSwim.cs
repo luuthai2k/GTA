@@ -19,6 +19,9 @@ public class PlayerSwim : MonoBehaviour
     [SerializeField]
     private PlayerHP playerHP;
 
+    [SerializeField]
+    private bool spintSwim;
+
     public void HandleInput(CharacterControl characterControl)
     {
         
@@ -28,19 +31,23 @@ public class PlayerSwim : MonoBehaviour
         if (direction == Vector3.zero)
         {
             Player.ins.animator.SetInteger("IsSwimming", 1);
-            playerHP.OnHit(HitDameState.Water, false, 10,Vector3.zero);
+
         }
         else
         {
             Player.ins.animator.SetInteger("IsSwimming", 2);
-            playerHP.OnHit(HitDameState.Water, false, 10,Vector3.zero);
+            
         }
         
         float targetAngle = Mathf.Atan2(direction.normalized.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
         angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
-   
+
         if (characterControl.isSprint)
         {
+            Player.ins.animator.SetInteger("IsSwimming", 3);
+
+            playerHP.LoseStamina(0.5f);
+
             currenspeed = speed * 2.5f;
             foward = 1.5f;
             rot = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(new Vector3(0f, Camera.main.transform.eulerAngles.y, 0f)), speedrotatesprint);
@@ -58,18 +65,13 @@ public class PlayerSwim : MonoBehaviour
         {
             Player.ins.animator.applyRootMotion = true;
         }
-       
-
+      
         //Player.ins.characterController.Move((transform.forward * currenspeed + new Vector3(0.0f, _verticalVelocity, 0.0f)) * Time.deltaTime);
         if (characterControl.joystick.Vertical != 0 || characterControl.joystick.Horizontal != 0 || characterControl.isSprint)
         {
             transform.rotation = rot;
         }
-
-
     }
-
-
     public void OnGround()
     {
         Player.ins.animator.SetInteger("IsSwimming", 0);

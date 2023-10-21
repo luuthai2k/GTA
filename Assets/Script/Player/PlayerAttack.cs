@@ -49,7 +49,7 @@ public class PlayerAttack : MonoBehaviour
         }
         if (selectWeapon == SelectWeapon.Shotgun)
         {
-            _weapon.GetComponent<ShotGun>().StartShooting();
+            //_weapon.GetComponent<ShotGun>().StartShooting();
         }
         if (selectWeapon == SelectWeapon.Minigun)
         {
